@@ -1,10 +1,18 @@
+import os
+import sys
+
+# Ensure the api directory is in the path for Vercel
+sys.path.append(os.path.dirname(__file__))
+
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-from model import predict_dropout
+try:
+    from model import predict_dropout
+except ImportError:
+    from .model import predict_dropout
 import pandas as pd
 import io
-import json
 
 app = FastAPI(
     title="Student Dropout Risk Prediction API",
@@ -12,6 +20,7 @@ app = FastAPI(
     version="1.5.0",
 )
 
+# Robust CORS for Vercel deployments
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -26,14 +35,22 @@ class StudentData(BaseModel):
     sem2_cgpa: float = Field(..., ge=0, le=10)
     fee_paid: int = Field(..., ge=0, le=1)
 
+@app.get("/")
+@app.get("/api")
+async def root():
+    return {"status": "ok", "message": "API is running"}
+
 @app.post("/predict")
+@app.post("/api/predict")
 async def predict(data: StudentData):
     try:
         return predict_dropout(data.attendance, data.sem1_cgpa, data.sem2_cgpa, data.fee_paid)
     except Exception as e:
+        print(f"Error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/predict-csv")
+@app.post("/api/predict-csv")
 async def predict_csv(file: UploadFile = File(...)):
     if not file.filename.endswith('.csv'):
         raise HTTPException(status_code=400, detail="Only CSV files are allowed.")
@@ -42,7 +59,6 @@ async def predict_csv(file: UploadFile = File(...)):
         contents = await file.read()
         df = pd.read_csv(io.BytesIO(contents))
         
-        # Required columns mapping (case-insensitive)
         required = {'attendance', 'sem1_cgpa', 'sem2_cgpa', 'fee_paid'}
         cols = {c.lower(): c for c in df.columns}
         
@@ -71,5 +87,6 @@ async def predict_csv(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=f"CSV Processing error: {str(e)}")
 
 @app.get("/health")
+@app.get("/api/health")
 async def health():
     return {"status": "healthy"}
