@@ -118,7 +118,7 @@ const StatCard = ({ label, value, icon, color }) => {
   return (
     <div className={`glass p-4 rounded-3xl border ${colors[color]} group transition-all duration-300 hover:-translate-y-1`}>
       <div className="flex items-center gap-3 mb-2">
-        <div className="p-2 rounded-xl bg-surface-slate group-hover:scale-110 transition-transform">
+        <div className="p-2 rounded-xl bg-slate-900 group-hover:scale-110 transition-transform">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             {icons[icon]}
           </svg>
