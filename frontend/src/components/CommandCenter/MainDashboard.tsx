@@ -1,6 +1,6 @@
 import React from 'react';
 import { 
-  LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  LineChart, Line, AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, BarChart, Bar
 } from 'recharts';
 import { motion } from 'framer-motion';
@@ -41,7 +41,7 @@ const MainDashboard: React.FC<MainDashboardProps> = ({ history }) => {
     <div className="grid grid-cols-12 gap-6">
       {/* ── Attendance Trends (Area) ── */}
       <ChartCard title="System Utilization / Trends" span="col-span-12 lg:col-span-8">
-        <ResponsiveContainer width="100%" height={250}>
+        <ResponsiveContainer width="100%" height={250} minWidth={0}>
           <AreaChart data={lineData}>
             <defs>
               <linearGradient id="colorVal" x1="0" y1="0" x2="0" y2="1">
@@ -69,7 +69,7 @@ const MainDashboard: React.FC<MainDashboardProps> = ({ history }) => {
       {/* ── Dropout Distribution (Pie) ── */}
       <ChartCard title="Outcome Entropy" span="col-span-12 lg:col-span-4">
         <div className="h-[250px] flex items-center justify-center relative">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                 <PieChart>
                 <Pie
                     data={pieData}
@@ -97,7 +97,7 @@ const MainDashboard: React.FC<MainDashboardProps> = ({ history }) => {
 
       {/* ── Feature Importance (Bar) ── */}
       <ChartCard title="Factor Influence Weight" span="col-span-12 lg:col-span-5">
-         <ResponsiveContainer width="100%" height={250}>
+         <ResponsiveContainer width="100%" height={250} minWidth={0}>
             <BarChart data={barData} layout="vertical">
                 <XAxis type="number" hide />
                 <YAxis dataKey="label" type="category" stroke="#fff" fontSize={10} width={40} axisLine={false} tickLine={false} />
@@ -113,7 +113,7 @@ const MainDashboard: React.FC<MainDashboardProps> = ({ history }) => {
 
       {/* ── Semester Averages (Line) ── */}
       <ChartCard title="Academic Trajectory" span="col-span-12 lg:col-span-7">
-        <ResponsiveContainer width="100%" height={250}>
+        <ResponsiveContainer width="100%" height={250} minWidth={0}>
             <LineChart data={lineData}>
                 {/* <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} /> */}
                 <XAxis dataKey="name" stroke="#475569" fontSize={10} tickLine={false} axisLine={false} />
@@ -143,10 +143,10 @@ interface ChartCardProps {
 
 const ChartCard: React.FC<ChartCardProps> = ({ title, children, span }) => (
     <motion.div
-        initial={{ opacity: 0, scale: 0.98 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
-        className={`${span} panel-glass rounded-[2.5rem] p-8 border border-white/5 relative group h-full`}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className={`${span} panel-glass rounded-[2.5rem] p-8 border border-white/5 relative group h-full min-h-[350px]`}
     >
         <div className="flex justify-between items-center mb-8">
             <h3 className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-500">{title}</h3>
