@@ -8,71 +8,38 @@ import ResultGauge from '../components/CommandCenter/ResultGauge';
 import AIExplanation from '../components/CommandCenter/AIExplanation';
 import BulkUpload from '../components/BulkUpload';
 import { predictDropoutRisk } from '../services/api';
-import { Bell, Search, User, ShieldCheck, LayoutDashboard, Database, BarChart3, Zap } from 'lucide-react';
+import { Bell, Search, User, LayoutDashboard, Database, BarChart3, Sparkles, ArrowRight, Activity } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-// ── Cinematic Stagger Variants ──
 const stagger = {
     hidden: {},
-    show: { transition: { staggerChildren: 0.12, delayChildren: 0.3 } },
+    show: { transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
 };
-
 const fadeUp = {
-    hidden: { opacity: 0, y: 60, filter: 'blur(10px)' },
-    show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 1, ease: [0.16, 1, 0.3, 1] } },
+    hidden: { opacity: 0, y: 50, filter: 'blur(8px)' },
+    show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] } },
 };
 
-const scaleIn = {
-    hidden: { opacity: 0, scale: 0.85 },
-    show: { opacity: 1, scale: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
-};
-
-// ── Typing Effect Component ──
 const TypeWriter = ({ text, className }: { text: string; className?: string }) => {
     const [displayed, setDisplayed] = useState('');
     const [idx, setIdx] = useState(0);
-    
     useEffect(() => {
         if (idx < text.length) {
             const timeout = setTimeout(() => {
                 setDisplayed(prev => prev + text[idx]);
                 setIdx(prev => prev + 1);
-            }, 40);
+            }, 30);
             return () => clearTimeout(timeout);
         }
     }, [idx, text]);
-    
     return (
         <span className={className}>
             {displayed}
-            <motion.span 
-                animate={{ opacity: [1, 0] }} 
-                transition={{ duration: 0.6, repeat: Infinity }}
-                className="text-brand-400"
-            >|</motion.span>
+            {idx < text.length && (
+                <motion.span animate={{ opacity: [1, 0] }} transition={{ duration: 0.5, repeat: Infinity }} className="text-accent-400">|</motion.span>
+            )}
         </span>
     );
-};
-
-// ── Mouse Parallax Hook ──
-const useMouseParallax = (sensitivity = 0.02) => {
-    const x = useMotionValue(0);
-    const y = useMotionValue(0);
-    const springX = useSpring(x, { stiffness: 50, damping: 20 });
-    const springY = useSpring(y, { stiffness: 50, damping: 20 });
-    
-    useEffect(() => {
-        const handleMouse = (e: MouseEvent) => {
-            const cx = window.innerWidth / 2;
-            const cy = window.innerHeight / 2;
-            x.set((e.clientX - cx) * sensitivity);
-            y.set((e.clientY - cy) * sensitivity);
-        };
-        window.addEventListener('mousemove', handleMouse);
-        return () => window.removeEventListener('mousemove', handleMouse);
-    }, [sensitivity, x, y]);
-    
-    return { x: springX, y: springY };
 };
 
 const Home = () => {
@@ -80,19 +47,27 @@ const Home = () => {
     const [history, setHistory] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [currentResult, setCurrentResult] = useState<any>(null);
-    const heroRef = useRef<HTMLDivElement>(null);
 
     const { scrollY } = useScroll();
-    const headerBlur = useTransform(scrollY, [0, 100], [0, 20]);
-    const headerOpacity = useTransform(scrollY, [0, 100], [0, 0.9]);
-    const headerBorder = useTransform(scrollY, [0, 100], [0, 1]);
-    
-    // Parallax for hero
-    const heroY = useTransform(scrollY, [0, 500], [0, 150]);
-    const heroScale = useTransform(scrollY, [0, 500], [1, 0.95]);
-    const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
-    
-    const mouse = useMouseParallax(0.015);
+    const headerBlur = useTransform(scrollY, [0, 80], [0, 16]);
+    const headerBg = useTransform(scrollY, [0, 80], ['rgba(6,10,19,0)', 'rgba(6,10,19,0.9)']);
+    const headerBorder = useTransform(scrollY, [0, 80], ['rgba(255,255,255,0)', 'rgba(255,255,255,0.04)']);
+    const heroY = useTransform(scrollY, [0, 500], [0, 120]);
+    const heroOpacity = useTransform(scrollY, [0, 350], [1, 0]);
+
+    // Mouse parallax
+    const mx = useMotionValue(0);
+    const my = useMotionValue(0);
+    const sx = useSpring(mx, { stiffness: 40, damping: 15 });
+    const sy = useSpring(my, { stiffness: 40, damping: 15 });
+    useEffect(() => {
+        const handler = (e: MouseEvent) => {
+            mx.set((e.clientX - window.innerWidth / 2) * 0.012);
+            my.set((e.clientY - window.innerHeight / 2) * 0.012);
+        };
+        window.addEventListener('mousemove', handler);
+        return () => window.removeEventListener('mousemove', handler);
+    }, [mx, my]);
 
     useEffect(() => {
         const saved = sessionStorage.getItem('risk_history');
@@ -111,275 +86,223 @@ const Home = () => {
             const result = await predictDropoutRisk(data);
             setCurrentResult(result);
             updateHistory({
-                ...result,
-                attendance: data.attendance,
+                ...result, attendance: data.attendance,
                 name: data.name || 'Anonymous Student',
                 timestamp: new Date().toLocaleTimeString()
             });
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
+        } catch (err) { console.error(err); }
+        finally { setLoading(false); }
     };
 
     const tabs = [
         { id: 'dashboard', label: 'Overview', icon: LayoutDashboard },
-        { id: 'predict', label: 'Predict', icon: ShieldCheck },
-        { id: 'bulk', label: 'Bulk Upload', icon: Database },
+        { id: 'predict', label: 'Predict', icon: Activity },
+        { id: 'bulk', label: 'Upload', icon: Database },
         { id: 'analytics', label: 'Analytics', icon: BarChart3 },
     ];
 
     return (
-        <div className="relative min-h-screen bg-slate-950 text-slate-400 selection:bg-brand-500/30 selection:text-brand-200 overflow-x-hidden">
-            {/* ── Live Animated Background ── */}
-            <GradientDots className="opacity-70" />
+        <div className="relative min-h-screen bg-[#060a13] text-slate-400 overflow-x-hidden">
+            <GradientDots className="opacity-80" />
 
-            {/* ── Progressive Blur Header ── */}
-            <motion.header 
-                style={{ 
-                    backdropFilter: useTransform(headerBlur, b => `blur(${b}px)`),
-                    backgroundColor: useTransform(headerOpacity, o => `rgba(2, 6, 23, ${o})`),
-                    borderBottom: useTransform(headerBorder, b => `${b}px solid rgba(255, 255, 255, 0.05)`)
+            {/* ── Header ── */}
+            <motion.header
+                style={{
+                    backdropFilter: useTransform(headerBlur, b => `blur(${b}px) saturate(1.3)`),
+                    backgroundColor: headerBg,
+                    borderBottom: useTransform(headerBorder, c => `1px solid ${c}`),
                 }}
-                className="fixed top-0 left-0 right-0 h-20 px-8 flex items-center justify-between z-50"
+                className="fixed top-0 left-0 right-0 h-16 px-6 lg:px-10 flex items-center justify-between z-50"
             >
-                <div className="flex items-center gap-12">
-                    <motion.div 
-                        className="flex items-center gap-3 group cursor-pointer" 
+                <div className="flex items-center gap-10">
+                    <motion.div
+                        className="flex items-center gap-3 cursor-pointer"
                         onClick={() => setActiveTab('dashboard')}
-                        whileHover={{ scale: 1.03 }}
-                        whileTap={{ scale: 0.97 }}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                     >
-                        <motion.div 
-                            className="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-600 to-brand-400 flex items-center justify-center text-white shadow-lg shadow-brand-500/20"
-                            animate={{ boxShadow: ['0 0 20px rgba(139,92,246,0.2)', '0 0 40px rgba(139,92,246,0.4)', '0 0 20px rgba(139,92,246,0.2)'] }}
+                        <motion.div
+                            className="w-9 h-9 rounded-xl flex items-center justify-center text-white"
+                            style={{ background: 'linear-gradient(135deg, #06b6d4, #0891b2)' }}
+                            animate={{ boxShadow: ['0 0 15px rgba(6,182,212,0.2)', '0 0 30px rgba(6,182,212,0.35)', '0 0 15px rgba(6,182,212,0.2)'] }}
                             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                         >
-                            <ShieldCheck className="w-6 h-6 stroke-[2.5px]" />
+                            <Sparkles className="w-5 h-5" />
                         </motion.div>
                         <div className="hidden sm:block">
-                            <h1 className="text-white font-black text-sm tracking-widest uppercase leading-none">DROPOUT<span className="text-brand-400">AI</span></h1>
-                            <span className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">COE Program</span>
+                            <h1 className="text-white font-bold text-sm tracking-wide leading-none">
+                                Dropout<span className="text-accent-400">AI</span>
+                            </h1>
+                            <span className="text-[9px] text-slate-600 font-medium tracking-wider">COE Program</span>
                         </div>
                     </motion.div>
 
-                    <nav className="hidden lg:flex items-center gap-1">
+                    <nav className="hidden lg:flex items-center gap-0.5 p-1 rounded-xl bg-white/[0.02] border border-white/[0.04]">
                         {tabs.map((tab) => (
                             <motion.button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
-                                whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 className={cn(
-                                    "px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all duration-500 flex items-center gap-2.5 relative",
-                                    activeTab === tab.id 
-                                        ? "text-white" 
-                                        : "text-slate-500 hover:text-slate-300"
+                                    "px-4 py-2 rounded-lg text-[11px] font-semibold transition-all duration-300 flex items-center gap-2 relative",
+                                    activeTab === tab.id ? "text-white" : "text-slate-500 hover:text-slate-300"
                                 )}
                             >
                                 {activeTab === tab.id && (
-                                    <motion.div 
-                                        layoutId="activeTab"
-                                        className="absolute inset-0 bg-white/5 border border-white/10 rounded-2xl"
-                                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                    <motion.div
+                                        layoutId="pill"
+                                        className="absolute inset-0 rounded-lg"
+                                        style={{ background: 'rgba(6, 182, 212, 0.1)', border: '1px solid rgba(6, 182, 212, 0.15)' }}
+                                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
                                     />
                                 )}
-                                <tab.icon className={cn("w-4 h-4 relative z-10", activeTab === tab.id ? "text-brand-400" : "text-slate-600")} />
+                                <tab.icon className={cn("w-3.5 h-3.5 relative z-10", activeTab === tab.id && "text-accent-400")} />
                                 <span className="relative z-10">{tab.label}</span>
                             </motion.button>
                         ))}
                     </nav>
                 </div>
 
-                <div className="flex items-center gap-8">
-                    <div className="hidden md:flex items-center gap-4 text-slate-500 px-5 py-2.5 rounded-2xl bg-white/[0.03] group border border-white/[0.05] hover:border-brand-500/50 transition-all cursor-text overflow-hidden relative">
-                        <Search className="w-3.5 h-3.5 group-hover:text-white transition-colors" />
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600">Search System...</span>
-                        <div className="px-1.5 py-0.5 rounded-md bg-white/5 text-[8px] border border-white/10 ml-4 font-black">⌘K</div>
+                <div className="flex items-center gap-3">
+                    <div className="hidden md:flex items-center gap-3 text-slate-500 px-4 py-2 rounded-xl bg-white/[0.02] border border-white/[0.04] hover:border-accent-500/30 transition-all cursor-text">
+                        <Search className="w-3.5 h-3.5" />
+                        <span className="text-[11px] text-slate-600">Search...</span>
+                        <kbd className="px-1.5 py-0.5 rounded bg-white/5 text-[8px] border border-white/10 font-mono ml-6">⌘K</kbd>
                     </div>
-                    
-                    <div className="flex items-center gap-4">
-                        <motion.div 
-                            className="relative cursor-pointer group p-2.5 rounded-xl hover:bg-white/5 transition-colors"
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                        >
-                             <Bell className="w-5 h-5 text-slate-500 group-hover:text-white transition-colors" />
-                             <motion.span 
-                                className="absolute top-2 right-2 w-2 h-2 bg-brand-500 rounded-full border-2 border-slate-950"
-                                animate={{ scale: [1, 1.4, 1] }}
-                                transition={{ duration: 2, repeat: Infinity }}
-                             />
-                        </motion.div>
-                        <motion.div 
-                            className="w-10 h-10 rounded-2xl bg-slate-900 border border-white/10 flex items-center justify-center text-slate-400 hover:border-brand-500 transition-all cursor-pointer group overflow-hidden"
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                        >
-                            <User className="w-5 h-5" />
-                        </motion.div>
-                    </div>
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="relative cursor-pointer p-2 rounded-lg hover:bg-white/5 transition-colors">
+                        <Bell className="w-4.5 h-4.5 text-slate-500" />
+                        <motion.span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-accent-400 rounded-full" animate={{ scale: [1, 1.5, 1] }} transition={{ duration: 2, repeat: Infinity }} />
+                    </motion.div>
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-9 h-9 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center text-slate-500 hover:text-white hover:border-accent-500/30 transition-all cursor-pointer">
+                        <User className="w-4 h-4" />
+                    </motion.div>
                 </div>
             </motion.header>
 
-            <main className="max-w-7xl mx-auto px-6 pt-40 pb-24 relative z-10">
-                {/* ── Cinematic Hero Section ── */}
-                <motion.header 
-                    ref={heroRef}
-                    style={{ y: heroY, scale: heroScale, opacity: heroOpacity, x: mouse.x, }}
-                    className="mb-24 text-center max-w-5xl mx-auto relative"
-                >
+            <main className="max-w-6xl mx-auto px-6 pt-36 pb-24 relative z-10">
+                {/* ── Hero ── */}
+                <motion.div style={{ y: heroY, opacity: heroOpacity, x: sx }} className="mb-28 text-center max-w-4xl mx-auto relative">
                     <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-8">
-                        {/* Status badge */}
+
                         <motion.div variants={fadeUp} className="flex justify-center">
-                            <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-brand-500/10 border border-brand-500/20 text-[9px] font-black text-brand-400 uppercase tracking-[0.3em] backdrop-blur-md">
-                                <motion.span 
-                                    className="w-2 h-2 rounded-full bg-brand-400"
-                                    animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
-                                    transition={{ duration: 2, repeat: Infinity }}
-                                />
-                                <Zap className="w-3 h-3" />
-                                COE Neural System Active
+                            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-semibold text-accent-400 tracking-wider backdrop-blur-md"
+                                 style={{ background: 'rgba(6,182,212,0.08)', border: '1px solid rgba(6,182,212,0.15)' }}>
+                                <motion.span className="w-1.5 h-1.5 rounded-full bg-accent-400" animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }} transition={{ duration: 2, repeat: Infinity }} />
+                                CENTRE OF EXCELLENCE — LIVE SYSTEM
                             </div>
                         </motion.div>
-                        
-                        {/* Main headline with typing effect */}
+
                         <motion.div variants={fadeUp}>
-                            <h2 className="text-6xl md:text-8xl lg:text-9xl font-black text-white tracking-tighter leading-[0.85] overflow-hidden">
-                                <motion.span 
-                                    className="block"
-                                    initial={{ y: 100, opacity: 0 }}
-                                    animate={{ y: 0, opacity: 1 }}
-                                    transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                                >
-                                    PREDICTING
+                            <h2 className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9]">
+                                <motion.span className="block text-white" initial={{ y: 80, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}>
+                                    Student Dropout
                                 </motion.span>
-                                <motion.span 
-                                    className="block gradient-text"
-                                    initial={{ y: 100, opacity: 0 }}
-                                    animate={{ y: 0, opacity: 1 }}
-                                    transition={{ duration: 1.2, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-                                >
-                                    STUDENT
-                                </motion.span>
-                                <motion.span 
-                                    className="block gradient-text"
-                                    initial={{ y: 100, opacity: 0 }}
-                                    animate={{ y: 0, opacity: 1 }}
-                                    transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                                >
-                                    SUCCESS
+                                <motion.span className="block gradient-text" initial={{ y: 80, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}>
+                                    Risk Prediction
                                 </motion.span>
                             </h2>
                         </motion.div>
-                        
-                        {/* Subtitle with typing effect */}
-                        <motion.div variants={fadeUp} className="max-w-2xl mx-auto">
-                            <p className="text-lg md:text-xl text-slate-400 font-medium leading-relaxed">
-                                <TypeWriter text="AI-powered risk analytics identifying at-risk students before dropout occurs. Built for the Centre of Excellence program." />
+
+                        <motion.div variants={fadeUp} className="max-w-xl mx-auto">
+                            <p className="text-base sm:text-lg text-slate-400/80 leading-relaxed font-normal">
+                                <TypeWriter text="Predict at-risk students using AI-powered analytics. Identify, intervene, and improve retention outcomes." />
                             </p>
                         </motion.div>
 
-                        {/* CTA Buttons */}
-                        <motion.div variants={fadeUp} className="flex items-center justify-center gap-4 pt-4">
+                        <motion.div variants={fadeUp} className="flex flex-wrap items-center justify-center gap-4 pt-2">
                             <motion.button
-                                whileHover={{ scale: 1.05, y: -3 }}
-                                whileTap={{ scale: 0.95 }}
+                                whileHover={{ scale: 1.04, y: -2 }}
+                                whileTap={{ scale: 0.96 }}
                                 onClick={() => setActiveTab('predict')}
-                                className="btn-premium px-10 py-4 text-xs tracking-[0.2em] font-black uppercase shimmer-indigo"
+                                className="btn-premium px-8 py-3.5 text-sm font-semibold shimmer-accent gap-2"
                             >
-                                <Zap className="w-4 h-4 mr-2" />
                                 Start Prediction
+                                <ArrowRight className="w-4 h-4" />
                             </motion.button>
                             <motion.button
-                                whileHover={{ scale: 1.05, y: -3 }}
-                                whileTap={{ scale: 0.95 }}
+                                whileHover={{ scale: 1.04, y: -2 }}
+                                whileTap={{ scale: 0.96 }}
                                 onClick={() => setActiveTab('bulk')}
-                                className="px-10 py-4 rounded-2xl text-xs tracking-[0.2em] font-black uppercase border border-white/10 text-slate-400 hover:text-white hover:border-white/30 transition-all"
+                                className="px-8 py-3.5 rounded-2xl text-sm font-semibold border border-white/[0.08] text-slate-400 hover:text-white hover:border-white/20 transition-all gap-2 flex items-center"
                             >
-                                <Database className="w-4 h-4 mr-2 inline" />
+                                <Database className="w-4 h-4" />
                                 Bulk Upload
                             </motion.button>
                         </motion.div>
+
+                        {/* Floating stats pills */}
+                        <motion.div variants={fadeUp} className="flex items-center justify-center gap-6 pt-6">
+                            {[
+                                { label: 'Accuracy', value: '98.2%' },
+                                { label: 'Risk Levels', value: '4 Tiers' },
+                                { label: 'Response', value: '<50ms' }
+                            ].map((item, i) => (
+                                <motion.div
+                                    key={i}
+                                    animate={{ y: [0, -4, 0] }}
+                                    transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}
+                                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.02] border border-white/[0.04]"
+                                >
+                                    <span className="text-[11px] font-bold text-white">{item.value}</span>
+                                    <span className="text-[10px] text-slate-600">{item.label}</span>
+                                </motion.div>
+                            ))}
+                        </motion.div>
                     </motion.div>
+                </motion.div>
 
-                    {/* ── Floating Decorative Elements ── */}
-                    <motion.div 
-                        className="absolute -left-20 top-20 w-2 h-20 rounded-full bg-gradient-to-b from-brand-500/40 to-transparent"
-                        animate={{ height: [80, 120, 80], opacity: [0.3, 0.6, 0.3] }}
-                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                    />
-                    <motion.div 
-                        className="absolute -right-16 top-40 w-1.5 h-16 rounded-full bg-gradient-to-b from-brand-400/30 to-transparent"
-                        animate={{ height: [64, 100, 64], opacity: [0.2, 0.5, 0.2] }}
-                        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                    />
-                </motion.header>
-
-                {/* ── Content Switcher ── */}
+                {/* ── Content ── */}
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={activeTab}
-                        initial={{ opacity: 0, y: 40, filter: 'blur(10px)' }}
+                        initial={{ opacity: 0, y: 30, filter: 'blur(8px)' }}
                         animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                        exit={{ opacity: 0, y: -30, filter: 'blur(10px)' }}
-                        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                        exit={{ opacity: 0, y: -20, filter: 'blur(8px)' }}
+                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                     >
                         {activeTab === 'dashboard' && (
-                            <motion.div className="space-y-16" variants={stagger} initial="hidden" animate="show">
-                                <motion.div variants={scaleIn}>
-                                    <StatGrid stats={{ 
-                                        total: history.length, 
-                                        critical: history.filter(h => h.risk_level === 'Critical').length, 
-                                        avgAttendance: history.length > 0 
-                                            ? `${Math.round(history.reduce((a: number, b: any) => a + b.attendance, 0) / history.length)}%` 
-                                            : '0%' 
-                                    }} />
-                                </motion.div>
-                                <motion.div variants={scaleIn} className="panel-glass rounded-[3.5rem] p-2 shadow-2xl relative">
-                                    <div className="absolute inset-0 bg-brand-500/5 blur-[120px] rounded-full -z-10" />
+                            <div className="space-y-10">
+                                <StatGrid stats={{
+                                    total: history.length,
+                                    critical: history.filter(h => h.risk_level === 'Critical').length,
+                                    avgAttendance: history.length > 0
+                                        ? `${Math.round(history.reduce((a: number, b: any) => a + b.attendance, 0) / history.length)}%`
+                                        : '0%'
+                                }} />
+                                <div className="panel-glass rounded-3xl p-1.5 relative">
                                     <MainDashboard history={history} />
-                                </motion.div>
-                            </motion.div>
+                                </div>
+                            </div>
                         )}
 
                         {activeTab === 'predict' && (
-                            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-                                <motion.div 
-                                    className="lg:col-span-12 xl:col-span-7"
-                                    initial={{ opacity: 0, x: -40 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                                >
+                            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+                                <motion.div className="lg:col-span-12 xl:col-span-7" initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
                                     <PredictionHub onSubmit={handlePredict} loading={loading} />
                                 </motion.div>
-                                <motion.div 
-                                    className="lg:col-span-12 xl:col-span-5 space-y-10 lg:mt-4"
-                                    initial={{ opacity: 0, x: 40 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                                >
+                                <motion.div className="lg:col-span-12 xl:col-span-5 space-y-8" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.15 }}>
                                     {currentResult ? (
                                         <>
                                             <ResultGauge probability={currentResult.probability} riskLevel={currentResult.risk_level} />
                                             <AIExplanation result={currentResult} />
                                         </>
                                     ) : (
-                                        <motion.div 
-                                            className="panel-glass rounded-[3rem] p-16 text-center flex flex-col items-center justify-center min-h-[500px] border-dashed border-2 border-white/[0.05]"
-                                            animate={{ borderColor: ['rgba(255,255,255,0.05)', 'rgba(139,92,246,0.15)', 'rgba(255,255,255,0.05)'] }}
+                                        <motion.div
+                                            className="panel-glass rounded-3xl p-14 text-center flex flex-col items-center justify-center min-h-[480px]"
+                                            style={{ border: '1px dashed rgba(255,255,255,0.06)' }}
+                                            animate={{ borderColor: ['rgba(255,255,255,0.06)', 'rgba(6,182,212,0.15)', 'rgba(255,255,255,0.06)'] }}
                                             transition={{ duration: 4, repeat: Infinity }}
                                         >
-                                            <motion.div 
-                                                className="w-24 h-24 rounded-[2.5rem] bg-slate-900 flex items-center justify-center mb-8 text-slate-600"
-                                                animate={{ rotate: [0, 5, -5, 0], scale: [1, 1.05, 1] }}
-                                                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                                            <motion.div
+                                                className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 text-slate-600"
+                                                style={{ background: 'rgba(6,182,212,0.05)', border: '1px solid rgba(6,182,212,0.1)' }}
+                                                animate={{ rotate: [0, 3, -3, 0] }}
+                                                transition={{ duration: 6, repeat: Infinity }}
                                             >
-                                                <Search className="w-10 h-10" />
+                                                <Search className="w-8 h-8" />
                                             </motion.div>
-                                            <h3 className="text-white font-black uppercase tracking-[0.3em] text-sm mb-4">Awaiting Data</h3>
-                                            <p className="text-slate-500 text-xs max-w-[280px] leading-relaxed font-medium">Complete the prediction form to generate a real-time risk analysis report.</p>
+                                            <h3 className="text-white font-bold text-base mb-2">Ready for Analysis</h3>
+                                            <p className="text-slate-500 text-sm max-w-[260px] leading-relaxed">Complete the prediction form to generate a real-time risk assessment.</p>
                                         </motion.div>
                                     )}
                                 </motion.div>
@@ -387,62 +310,46 @@ const Home = () => {
                         )}
 
                         {activeTab === 'bulk' && (
-                            <motion.div 
-                                className="max-w-4xl mx-auto"
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.6 }}
-                            >
+                            <div className="max-w-4xl mx-auto">
                                 <BulkUpload onResult={() => setActiveTab('dashboard')} />
-                            </motion.div>
+                            </div>
                         )}
 
                         {activeTab === 'analytics' && (
-                            <motion.div 
-                                className="space-y-12"
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.6 }}
-                            >
-                                <div className="panel-glass rounded-[3.5rem] p-8">
-                                     <MainDashboard history={history} />
-                                </div>
-                            </motion.div>
+                            <div className="panel-glass rounded-3xl p-6">
+                                <MainDashboard history={history} />
+                            </div>
                         )}
                     </motion.div>
                 </AnimatePresence>
             </main>
 
-            {/* ── Cinematic Footer ── */}
-            <motion.footer 
+            {/* ── Footer ── */}
+            <motion.footer
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
-                className="max-w-7xl mx-auto px-10 py-16 border-t border-white/[0.05] flex flex-col md:flex-row justify-between items-center gap-8 relative z-10"
+                className="max-w-6xl mx-auto px-6 py-12 border-t border-white/[0.04] flex flex-col md:flex-row justify-between items-center gap-6 relative z-10"
             >
-                <div className="flex items-center gap-4">
-                    <motion.div 
-                        className="w-10 h-10 rounded-2xl bg-slate-900 border border-white/5 flex items-center justify-center text-brand-400"
-                        animate={{ boxShadow: ['0 0 0px rgba(139,92,246,0)', '0 0 20px rgba(139,92,246,0.15)', '0 0 0px rgba(139,92,246,0)'] }}
-                        transition={{ duration: 4, repeat: Infinity }}
-                    >
-                        <ShieldCheck className="w-5 h-5" />
-                    </motion.div>
-                    <div className="space-y-0.5">
-                        <div className="text-[10px] font-black text-white uppercase tracking-[0.2em]">DROPOUT AI &bull; COE PROGRAM</div>
-                        <div className="text-[9px] text-slate-600 font-bold uppercase tracking-widest">Student Success Intelligence</div>
+                <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center text-accent-400" style={{ background: 'rgba(6,182,212,0.1)' }}>
+                        <Sparkles className="w-4 h-4" />
+                    </div>
+                    <div>
+                        <div className="text-[11px] font-bold text-white tracking-wide">DropoutAI &bull; COE Program</div>
+                        <div className="text-[10px] text-slate-600">Student Success Intelligence</div>
                     </div>
                 </div>
-                
-                <div className="flex gap-10 uppercase tracking-[0.3em] text-[9px] font-black text-slate-500">
-                    <a href="#" className="hover:text-brand-400 transition-colors duration-500">Docs</a>
-                    <a href="#" className="hover:text-brand-400 transition-colors duration-500">API</a>
-                    <a href="#" className="hover:text-brand-400 transition-colors duration-500">Team</a>
+
+                <div className="flex gap-8 text-[10px] font-medium text-slate-600">
+                    <a href="#" className="hover:text-accent-400 transition-colors">Documentation</a>
+                    <a href="#" className="hover:text-accent-400 transition-colors">API Status</a>
+                    <a href="#" className="hover:text-accent-400 transition-colors">Team</a>
                 </div>
-                
-                <div className="text-[9px] font-black text-slate-700 uppercase tracking-widest leading-none text-center md:text-right">
+
+                <div className="text-[10px] text-slate-700 text-center md:text-right">
                     © 2026 DropoutAI Systems<br/>
-                    <span className="text-brand-500/30">Centre of Excellence</span>
+                    <span className="text-accent-500/30">Centre of Excellence</span>
                 </div>
             </motion.footer>
         </div>

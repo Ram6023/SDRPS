@@ -20,7 +20,7 @@ const PredictionHub: React.FC<PredictionHubProps> = ({ onSubmit, loading }) => {
 
   const steps = [
     { id: 1, label: 'Profile', icon: User },
-    { id: 2, label: 'Engagement', icon: Activity },
+    { id: 2, label: 'Attendance', icon: Activity },
     { id: 3, label: 'Academics', icon: GraduationCap },
     { id: 4, label: 'Finance', icon: CreditCard },
   ];
@@ -30,10 +30,7 @@ const PredictionHub: React.FC<PredictionHubProps> = ({ onSubmit, loading }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (step < 4) {
-        handleNext();
-        return;
-    }
+    if (step < 4) { handleNext(); return; }
     onSubmit({
       ...formData,
       attendance: parseFloat(formData.attendance),
@@ -45,34 +42,38 @@ const PredictionHub: React.FC<PredictionHubProps> = ({ onSubmit, loading }) => {
 
   return (
     <div className="w-full max-w-2xl mx-auto py-4">
-      {/* ── Progress Track ── */}
-      <div className="flex justify-between mb-16 relative px-4">
-        <div className="absolute top-1/2 left-0 w-full h-[2px] bg-slate-900 -translate-y-1/2 z-0" />
+      {/* Progress Track */}
+      <div className="flex justify-between mb-14 relative px-4">
+        <div className="absolute top-1/2 left-0 w-full h-[1px] -translate-y-1/2 z-0" style={{ background: 'rgba(255,255,255,0.06)' }} />
         <motion.div 
-            className="absolute top-1/2 left-0 h-[2px] bg-brand-500 -translate-y-1/2 z-0 origin-left"
+            className="absolute top-1/2 left-0 h-[1px] -translate-y-1/2 z-0 origin-left"
+            style={{ width: '100%', background: 'linear-gradient(90deg, #06b6d4, #22d3ee)' }}
             initial={{ scaleX: 0 }}
             animate={{ scaleX: (step - 1) / 3 }}
             transition={{ duration: 0.5 }}
-            style={{ width: '100%' }}
         />
         {steps.map((s) => (
           <div key={s.id} className="relative z-10">
             <motion.button
                 type="button"
                 onClick={() => setStep(s.id)}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.92 }}
                 className={cn(
-                    "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 border-2",
+                    "w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-500",
                     step >= s.id 
-                    ? 'bg-brand-500 border-brand-500 text-white shadow-[0_0_20px_rgba(139,92,246,0.3)]' 
-                    : 'bg-slate-950 border-slate-800 text-slate-600'
+                    ? 'text-white' 
+                    : 'text-slate-600 border border-white/[0.06]'
                 )}
+                style={step >= s.id ? { 
+                    background: 'linear-gradient(135deg, #06b6d4, #0891b2)',
+                    boxShadow: '0 0 20px rgba(6,182,212,0.25)' 
+                } : { background: 'rgba(12,18,30,0.8)' }}
             >
-              {step > s.id ? <Check className="w-6 h-6 stroke-[3px]" /> : <s.icon className="w-5 h-5" />}
+              {step > s.id ? <Check className="w-5 h-5 stroke-[2.5px]" /> : <s.icon className="w-4.5 h-4.5" />}
             </motion.button>
             <div className={cn(
-                "absolute top-full left-1/2 -translate-x-1/2 mt-3 text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-colors",
+                "absolute top-full left-1/2 -translate-x-1/2 mt-3 text-[9px] font-semibold uppercase tracking-wider whitespace-nowrap transition-colors",
                 step >= s.id ? 'text-white' : 'text-slate-600'
             )}>
                 {s.label}
@@ -81,9 +82,9 @@ const PredictionHub: React.FC<PredictionHubProps> = ({ onSubmit, loading }) => {
         ))}
       </div>
 
-      {/* ── Form Content ── */}
-      <form onSubmit={handleSubmit} className="panel-glass rounded-[3rem] p-10 relative overflow-hidden shadow-2xl">
-        <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-transparent via-brand-500/50 to-transparent" />
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="panel-glass rounded-3xl p-8 sm:p-10 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-[1px]" style={{ background: 'linear-gradient(90deg, transparent, rgba(6,182,212,0.3), transparent)' }} />
         
         <AnimatePresence mode="wait">
           <motion.div
@@ -91,114 +92,59 @@ const PredictionHub: React.FC<PredictionHubProps> = ({ onSubmit, loading }) => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.4, ease: "circOut" }}
-            className="space-y-10"
+            transition={{ duration: 0.35 }}
+            className="space-y-8"
           >
             {step === 1 && (
-              <div className="space-y-8">
-                <Header title="Identity Setup" desc="Enter the student's legal identification for data referencing." />
-                <InputGroup 
-                    label="Student Full Name"
-                    type="text"
-                    name="name"
-                    autoFocus
-                    placeholder="e.g. Jordan Vercel"
-                    value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
-                />
+              <div className="space-y-6">
+                <Header title="Student Profile" desc="Enter the student's name for identification." />
+                <InputGroup label="Full Name" type="text" name="name" autoFocus placeholder="e.g. Ravi Kumar"
+                    value={formData.name} onChange={(e: any) => setFormData({...formData, name: e.target.value})} />
               </div>
             )}
 
             {step === 2 && (
-              <div className="space-y-8">
-                <Header title="Engagement Vector" desc="Define the percentage of physical presence in institutional sessions." />
-                <InputGroup 
-                    label="Attendance Rate (%)"
-                    type="number"
-                    max={100}
-                    min={0}
-                    name="attendance"
-                    autoFocus
-                    placeholder="0 to 100"
-                    value={formData.attendance}
-                    onChange={(e) => setFormData({...formData, attendance: e.target.value})}
-                />
+              <div className="space-y-6">
+                <Header title="Attendance Record" desc="Enter the student's attendance percentage." />
+                <InputGroup label="Attendance (%)" type="number" max={100} min={0} name="attendance" autoFocus placeholder="0 — 100"
+                    value={formData.attendance} onChange={(e: any) => setFormData({...formData, attendance: e.target.value})} />
               </div>
             )}
 
             {step === 3 && (
-              <div className="space-y-8">
-                <Header title="Academic Trajectory" desc="Input historical CGPA benchmarks from the previous two semesters." />
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                    <InputGroup 
-                        label="Semester 1 CGPA"
-                        type="number"
-                        max={10}
-                        min={0}
-                        step="0.01"
-                        name="sem1_cgpa"
-                        placeholder="0.00"
-                        value={formData.sem1_cgpa}
-                        onChange={(e) => setFormData({...formData, sem1_cgpa: e.target.value})}
-                    />
-                    <InputGroup 
-                        label="Semester 2 CGPA"
-                        type="number"
-                        max={10}
-                        min={0}
-                        step="0.01"
-                        name="sem2_cgpa"
-                        placeholder="0.00"
-                        value={formData.sem2_cgpa}
-                        onChange={(e) => setFormData({...formData, sem2_cgpa: e.target.value})}
-                    />
+              <div className="space-y-6">
+                <Header title="Academic Performance" desc="Enter CGPA for both semesters." />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <InputGroup label="Semester 1 CGPA" type="number" max={10} min={0} step="0.01" name="sem1_cgpa" placeholder="0.00"
+                        value={formData.sem1_cgpa} onChange={(e: any) => setFormData({...formData, sem1_cgpa: e.target.value})} />
+                    <InputGroup label="Semester 2 CGPA" type="number" max={10} min={0} step="0.01" name="sem2_cgpa" placeholder="0.00"
+                        value={formData.sem2_cgpa} onChange={(e: any) => setFormData({...formData, sem2_cgpa: e.target.value})} />
                 </div>
               </div>
             )}
 
             {step === 4 && (
-              <div className="space-y-8">
-                <Header title="Financial Status" desc="Determine if the student has any outstanding institutional dues." />
-                <div className="grid grid-cols-2 gap-6">
-                  <SelectBox 
-                    active={formData.fee_paid === 1} 
-                    onClick={() => setFormData({...formData, fee_paid: 1})}
-                    label="Cleared"
-                    desc="No Dues"
-                  />
-                  <SelectBox 
-                    active={formData.fee_paid === 0} 
-                    onClick={() => setFormData({...formData, fee_paid: 0})}
-                    label="Outstanding"
-                    desc="Flagged"
-                  />
+              <div className="space-y-6">
+                <Header title="Fee Status" desc="Has the student paid all institutional fees?" />
+                <div className="grid grid-cols-2 gap-4">
+                  <SelectBox active={formData.fee_paid === 1} onClick={() => setFormData({...formData, fee_paid: 1})} label="Paid" desc="All Cleared" />
+                  <SelectBox active={formData.fee_paid === 0} onClick={() => setFormData({...formData, fee_paid: 0})} label="Unpaid" desc="Dues Pending" />
                 </div>
               </div>
             )}
           </motion.div>
         </AnimatePresence>
 
-        <div className="flex justify-between items-center mt-16 pt-8 border-t border-white/5">
-            <button 
-                type="button"
-                onClick={handleBack}
-                className={cn(
-                    "text-xs font-black uppercase text-slate-500 hover:text-white transition-opacity",
-                    step === 1 ? "opacity-0 pointer-events-none" : "opacity-100"
-                )}
-            >
+        <div className="flex justify-between items-center mt-12 pt-6" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+            <button type="button" onClick={handleBack}
+                className={cn("text-xs font-semibold text-slate-500 hover:text-white transition-opacity", step === 1 ? "opacity-0 pointer-events-none" : "opacity-100")}>
                 Back
             </button>
             
-            <motion.button 
-                type="submit"
-                disabled={loading}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="btn-premium px-10 shimmer-indigo py-4 text-xs tracking-[0.25em] font-black"
-            >
-                {step < 4 ? "Next Step" : loading ? "Calculating..." : "Run Prediction"}
-                <ChevronRight className="w-5 h-5 ml-1" />
+            <motion.button type="submit" disabled={loading} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                className="btn-premium px-8 shimmer-accent py-3.5 text-sm font-semibold gap-1">
+                {step < 4 ? "Continue" : loading ? "Analyzing..." : "Run Prediction"}
+                <ChevronRight className="w-4 h-4" />
             </motion.button>
         </div>
       </form>
@@ -207,40 +153,39 @@ const PredictionHub: React.FC<PredictionHubProps> = ({ onSubmit, loading }) => {
 };
 
 const Header = ({ title, desc }: { title: string, desc: string }) => (
-    <div className="space-y-2">
-        <h3 className="text-2xl font-black text-white tracking-tight">{title}</h3>
-        <p className="text-sm text-slate-500 font-medium leading-relaxed">{desc}</p>
+    <div className="space-y-1">
+        <h3 className="text-xl font-bold text-white">{title}</h3>
+        <p className="text-sm text-slate-500">{desc}</p>
     </div>
 );
 
 const InputGroup = ({ label, ...props }: any) => (
-    <div className="space-y-3">
-        <label className="text-[10px] font-black uppercase tracking-widest text-slate-600 ml-1">{label}</label>
-        <input 
-            {...props}
-            required
-            className="w-full bg-slate-900 border border-slate-800 text-white px-8 py-5 rounded-[1.5rem] outline-none focus:border-brand-500 focus:ring-8 focus:ring-brand-500/5 transition-all font-bold placeholder:text-slate-800 text-xl"
+    <div className="space-y-2">
+        <label className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 ml-1">{label}</label>
+        <input {...props} required
+            className="w-full text-white px-6 py-4 rounded-xl outline-none transition-all font-medium placeholder:text-slate-700 text-lg"
+            style={{ 
+                background: 'rgba(12,18,30,0.8)', 
+                border: '1px solid rgba(255,255,255,0.06)',
+            }}
+            onFocus={(e: any) => { e.target.style.borderColor = 'rgba(6,182,212,0.4)'; e.target.style.boxShadow = '0 0 0 4px rgba(6,182,212,0.05)'; }}
+            onBlur={(e: any) => { e.target.style.borderColor = 'rgba(255,255,255,0.06)'; e.target.style.boxShadow = 'none'; }}
         />
     </div>
 );
 
 const SelectBox = ({ active, onClick, label, desc }: any) => (
-    <button
-        type="button"
-        onClick={onClick}
-        className={cn(
-            "p-8 rounded-[2rem] border text-left transition-all group relative overflow-hidden",
-            active 
-                ? 'bg-brand-500/10 border-brand-500 shadow-[0_0_20px_rgba(139,92,246,0.1)]' 
-                : 'bg-slate-900 border-slate-800 hover:border-slate-700'
+    <button type="button" onClick={onClick}
+        className={cn("p-6 rounded-xl text-left transition-all group relative overflow-hidden",
+            active ? 'text-white' : 'hover:border-white/10'
         )}
+        style={active 
+            ? { background: 'rgba(6,182,212,0.08)', border: '1px solid rgba(6,182,212,0.2)', boxShadow: '0 0 15px rgba(6,182,212,0.08)' }
+            : { background: 'rgba(12,18,30,0.8)', border: '1px solid rgba(255,255,255,0.06)' }
+        }
     >
-        {active && <motion.div layoutId="select-glow" className="absolute inset-0 bg-brand-500/5" />}
-        <div className={cn(
-            "text-sm font-black uppercase tracking-widest mb-1 relative z-10",
-            active ? 'text-white' : 'text-slate-500'
-        )}>{label}</div>
-        <div className="text-[10px] text-slate-600 font-bold uppercase relative z-10">{desc}</div>
+        <div className={cn("text-sm font-bold mb-0.5 relative z-10", active ? 'text-white' : 'text-slate-500')}>{label}</div>
+        <div className="text-[10px] text-slate-600 relative z-10">{desc}</div>
     </button>
 );
 
