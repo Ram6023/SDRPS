@@ -29,40 +29,46 @@ export function GradientDots({
 			<div 
 				className="absolute inset-0"
 				style={{
-					backgroundImage: `radial-gradient(circle at center, rgba(255,255,255,0.08) ${dotSize}px, transparent ${dotSize}px)`,
+					backgroundImage: `radial-gradient(circle at center, rgba(255,255,255,0.05) ${dotSize}px, transparent ${dotSize}px)`,
 					backgroundSize: `${spacing}px ${spacing}px`,
 				}}
 			/>
 
-			{/* ── High-End Aurora Glows ── */}
+			{/* ── Cinematic Graphite Texture Layer ── */}
+			<div className="absolute inset-0 opacity-[0.4] mix-blend-overlay pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
+
+			{/* ── High-End Aurora Glows (Graphite/Indigo Tones) ── */}
 			<motion.div 
 				animate={{
-					scale: [1, 1.2, 1],
-					opacity: [0.15, 0.3, 0.15],
+					x: [-20, 20, -20],
+					y: [-20, 20, -20],
+					opacity: [0.1, 0.2, 0.1],
 				}}
 				transition={{
-					duration: 12,
+					duration: 15,
 					repeat: Infinity,
-					ease: "linear"
+					ease: "easeInOut"
 				}}
-				className="absolute -top-[20%] -left-[10%] w-[70%] h-[70%] bg-indigo-500/10 blur-[130px] rounded-full pointer-events-none"
+				className="absolute top-[10%] left-[20%] w-[50%] h-[50%] bg-indigo-500/10 blur-[160px] rounded-full pointer-events-none"
 			/>
 			
 			<motion.div 
 				animate={{
-					scale: [1.2, 1, 1.2],
-					opacity: [0.1, 0.2, 0.1],
+					x: [20, -20, 20],
+					y: [20, -20, 20],
+					opacity: [0.08, 0.15, 0.08],
 				}}
 				transition={{
-					duration: 18,
+					duration: 20,
 					repeat: Infinity,
-					ease: "linear"
+					ease: "easeInOut"
 				}}
-				className="absolute -bottom-[20%] -right-[10%] w-[70%] h-[70%] bg-violet-600/5 blur-[130px] rounded-full pointer-events-none"
+				className="absolute bottom-[10%] right-[20%] w-[50%] h-[50%] bg-slate-400/5 blur-[160px] rounded-full pointer-events-none"
 			/>
 
-			{/* ── Subtle Center vignetting ── */}
-			<div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(2,6,23,0.4)_100%)] pointer-events-none" />
+			{/* ── Vignette & Grain ── */}
+			<div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(2,6,23,0.8)_100%)] pointer-events-none" />
+			<div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] pointer-events-none" />
 		</div>
 	);
 }

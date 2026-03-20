@@ -23,26 +23,28 @@
 
 @layer components {
   .panel-glass {
-    @apply bg-white/[0.03] backdrop-blur-3xl border border-white/[0.05];
-    box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.5);
+    @apply bg-slate-900/40 backdrop-blur-2xl border border-white/[0.06];
+    box-shadow: 
+      0 4px 24px -1px rgba(0, 0, 0, 0.4),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.05);
   }
 
   .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-br from-white via-white to-brand-500;
+    @apply bg-clip-text text-transparent bg-gradient-to-br from-white via-slate-200 to-indigo-400;
   }
 
   .btn-premium {
-    @apply relative overflow-hidden bg-brand-600 text-white rounded-2xl flex items-center justify-center transition-all duration-500 shadow-lg shadow-brand-500/20 active:scale-95;
+    @apply relative overflow-hidden bg-white text-slate-950 rounded-2xl flex items-center justify-center transition-all duration-700 shadow-2xl active:scale-95 border border-white/20;
   }
 
   .btn-premium:hover {
-    @apply bg-brand-500 -translate-y-0.5 shadow-brand-500/40;
+    @apply -translate-y-1 shadow-white/10 bg-slate-100;
   }
 
   .shimmer-indigo::after {
     content: '';
-    @apply absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent;
-    animation: shimmer 3s infinite;
+    @apply absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-black/10 to-transparent;
+    animation: shimmer 4s infinite;
   }
 }
 
