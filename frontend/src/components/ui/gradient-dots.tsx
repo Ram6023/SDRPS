@@ -42,19 +42,19 @@ export function GradientDots({ className }: CinematicBackgroundProps) {
 		resize();
 		window.addEventListener('resize', resize);
 
-		// Updated colors: Violet, Indigo, Fuchsia, Rose
-		const colors = ['139, 92, 246', '99, 102, 241', '217, 70, 239', '244, 63, 94'];
-		for (let i = 0; i < 65; i++) {
+		// Aurora Mesh: Violet, Indigo, Fuchsia, Rose, Deep Blue
+		const colors = ['139, 92, 246', '99, 102, 241', '217, 70, 239', '244, 63, 94', '59, 130, 246'];
+		for (let i = 0; i < 75; i++) {
 			particles.push({
 				x: Math.random() * canvas.width,
 				y: Math.random() * canvas.height,
-				z: Math.random() * 3 + 0.5,
-				vx: (Math.random() - 0.5) * 0.12,
-				vy: (Math.random() - 0.5) * 0.12,
-				size: Math.random() * 2 + 0.5,
-				opacity: Math.random() * 0.18 + 0.04,
+				z: Math.random() * 3.5 + 0.5,
+				vx: (Math.random() - 0.5) * 0.1,
+				vy: (Math.random() - 0.5) * 0.1,
+				size: Math.random() * 2.2 + 0.6,
+				opacity: Math.random() * 0.2 + 0.05,
 				pulse: Math.random() * Math.PI * 2,
-				speed: Math.random() * 0.005 + 0.002,
+				speed: Math.random() * 0.004 + 0.002,
 				color: colors[Math.floor(Math.random() * colors.length)],
 			});
 		}
@@ -64,55 +64,60 @@ export function GradientDots({ className }: CinematicBackgroundProps) {
 			const mx = smoothX.get();
 			const my = smoothY.get();
 
-			// Mouse-reactive grid (subtle violet)
-			const spacing = 75;
+			// ── Cinematic Mesh Pattern ──
+			const spacing = 80;
 			for (let x = 0; x < canvas.width; x += spacing) {
 				for (let y = 0; y < canvas.height; y += spacing) {
-					const dx = (x / canvas.width - mx) * 10;
-					const dy = (y / canvas.height - my) * 10;
+					const dx = (x / canvas.width - mx) * 12;
+					const dy = (y / canvas.height - my) * 12;
 					ctx.beginPath();
-					ctx.arc(x + dx, y + dy, 0.4, 0, Math.PI * 2);
-					ctx.fillStyle = 'rgba(139, 92, 246, 0.035)';
+					ctx.arc(x + dx, y + dy, 0.45, 0, Math.PI * 2);
+					ctx.fillStyle = 'rgba(139, 92, 246, 0.05)';
 					ctx.fill();
 				}
 			}
 
-			// Particles with depth-based parallax
+			// ── Particles with Depth ──
 			particles.forEach(p => {
-				const parallaxFactor = p.z * 0.4;
-				const offsetX = (mx - 0.5) * 35 * parallaxFactor;
-				const offsetY = (my - 0.5) * 35 * parallaxFactor;
-				p.x += p.vx;
-				p.y += p.vy;
-				p.pulse += p.speed;
-				if (p.x < -10) p.x = canvas.width + 10;
-				if (p.x > canvas.width + 10) p.x = -10;
-				if (p.y < -10) p.y = canvas.height + 10;
-				if (p.y > canvas.height + 10) p.y = -10;
+				const parallaxFactor = p.z * 0.45;
+				const offsetX = (mx - 0.5) * 45 * parallaxFactor;
+				const offsetY = (my - 0.5) * 45 * parallaxFactor;
+				p.x += p.vx; p.y += p.vy; p.pulse += p.speed;
+				
+				if (p.x < -20) p.x = canvas.width + 20;
+				if (p.x > canvas.width + 20) p.x = -20;
+				if (p.y < -20) p.y = canvas.height + 20;
+				if (p.y > canvas.height + 20) p.y = -20;
 
 				const drawX = p.x + offsetX;
 				const drawY = p.y + offsetY;
 				const pulseOpacity = p.opacity + Math.sin(p.pulse) * 0.07;
-				const drawSize = p.size * (0.85 + p.z * 0.3);
+				const drawSize = p.size * (0.8 + p.z * 0.35);
 
 				ctx.beginPath();
 				ctx.arc(drawX, drawY, drawSize, 0, Math.PI * 2);
 				ctx.fillStyle = `rgba(${p.color}, ${Math.max(0, pulseOpacity)})`;
 				ctx.fill();
+
+				// Ambient bloom per particle
+				ctx.beginPath();
+				ctx.arc(drawX, drawY, drawSize * 4, 0, Math.PI * 2);
+				ctx.fillStyle = `rgba(${p.color}, ${Math.max(0, pulseOpacity * 0.1)})`;
+				ctx.fill();
 			});
 
-			// Connections between close particles at same depth
+			// ── Connections ──
 			for (let i = 0; i < particles.length; i++) {
 				for (let j = i + 1; j < particles.length; j++) {
 					const ddx = particles[i].x - particles[j].x;
 					const ddy = particles[i].y - particles[j].y;
 					const dist = Math.sqrt(ddx * ddx + ddy * ddy);
-					if (dist < 100 && Math.abs(particles[i].z - particles[j].z) < 0.8) {
+					if (dist < 110 && Math.abs(particles[i].z - particles[j].z) < 0.6) {
 						ctx.beginPath();
 						ctx.moveTo(particles[i].x, particles[i].y);
 						ctx.lineTo(particles[j].x, particles[j].y);
-						ctx.strokeStyle = `rgba(139, 92, 246, ${0.03 * (1 - dist / 100)})`;
-						ctx.lineWidth = 0.35;
+						ctx.strokeStyle = `rgba(139, 92, 246, ${0.05 * (1 - dist / 110)})`;
+						ctx.lineWidth = 0.4;
 						ctx.stroke();
 					}
 				}
@@ -123,45 +128,46 @@ export function GradientDots({ className }: CinematicBackgroundProps) {
 		return () => { cancelAnimationFrame(animationId); window.removeEventListener('resize', resize); };
 	}, [smoothX, smoothY]);
 
-	const orb1X = useTransform(smoothX, [0, 1], [-40, 40]);
-	const orb1Y = useTransform(smoothY, [0, 1], [-30, 30]);
-	const orb2X = useTransform(smoothX, [0, 1], [30, -30]);
-	const orb2Y = useTransform(smoothY, [0, 1], [20, -20]);
-	const orb3X = useTransform(smoothX, [0, 1], [-20, 20]);
-	const orb3Y = useTransform(smoothY, [0, 1], [-30, 30]);
-	const orb1RotX = useTransform(smoothY, [0, 1], [6, -6]);
-	const orb1RotY = useTransform(smoothX, [0, 1], [-6, 6]);
+	const orb1X = useTransform(smoothX, [0, 1], [-50, 50]);
+	const orb1Y = useTransform(smoothY, [0, 1], [-40, 40]);
+	const orb2X = useTransform(smoothX, [0, 1], [40, -40]);
+	const orb3X = useTransform(smoothX, [0, 1], [-30, 30]);
 
 	return (
 		<div className={`absolute inset-0 overflow-hidden ${className}`} style={{ backgroundColor: '#040409', perspective: '1200px' }}>
+			{/* Mesh Aurora Bloom Background */}
+			<div className="absolute inset-0 w-full h-full opacity-40">
+				<div className="absolute top-[-10%] left-[-10%] w-[80%] h-[80%] bg-[radial-gradient(circle_at_center,rgba(139,92,246,0.15)_0%,transparent_70%)] blur-[100px] animate-pulse" />
+				<div className="absolute bottom-[-10%] right-[-10%] w-[80%] h-[80%] bg-[radial-gradient(circle_at_center,rgba(217,70,239,0.12)_0%,transparent_70%)] blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
+				<div className="absolute top-[30%] left-[20%] w-[60%] h-[60%] bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.08)_0%,transparent_70%)] blur-[100px] animate-pulse" style={{ animationDelay: '2.5s' }} />
+			</div>
+
 			<canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
 
-			{/* 3D Floating Orbs - Deep Amethyst & Fuchsia */}
+			{/* Floating Glass Orbs */}
 			<motion.div
-				style={{ x: orb1X, y: orb1Y, rotateX: orb1RotX, rotateY: orb1RotY, background: 'radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 65%)', willChange: 'transform' }}
-				animate={{ scale: [1, 1.25, 1], rotate: [0, 5, 0] }}
-				transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
-				className="absolute top-[5%] left-[10%] w-[600px] h-[600px] rounded-full pointer-events-none"
+				style={{ x: orb1X, y: orb1Y, background: 'radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 60%)' }}
+				animate={{ scale: [1, 1.3, 1], rotate: [0, 20, 0] }}
+				transition={{ duration: 15, repeat: Infinity }}
+				className="absolute top-[10%] left-[15%] w-[600px] h-[600px] rounded-full pointer-events-none blur-3xl"
 			/>
 			<motion.div
-				style={{ x: orb2X, y: orb2Y, background: 'radial-gradient(circle, rgba(217,70,239,0.05) 0%, transparent 65%)', willChange: 'transform' }}
-				animate={{ scale: [1.2, 0.95, 1.2], rotate: [0, -5, 0] }}
-				transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-				className="absolute bottom-[5%] right-[5%] w-[550px] h-[550px] rounded-full pointer-events-none"
-			/>
-			<motion.div
-				style={{ x: orb3X, y: orb3Y, background: 'radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 60%)', willChange: 'transform' }}
-				animate={{ scale: [0.85, 1.15, 0.85] }}
-				transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
-				className="absolute top-[40%] left-[40%] w-[400px] h-[400px] rounded-full pointer-events-none"
+				style={{ x: orb2X, y: orb1Y, background: 'radial-gradient(circle, rgba(217,70,239,0.08) 0%, transparent 60%)' }}
+				animate={{ scale: [1.2, 0.9, 1.2], rotate: [0, -20, 0] }}
+				transition={{ duration: 20, repeat: Infinity }}
+				className="absolute bottom-[5%] right-[5%] w-[500px] h-[500px] rounded-full pointer-events-none blur-3xl"
 			/>
 
+			{/* Grain & Noise Overlay for Premium look */}
+			<div className="absolute inset-0 opacity-[0.02] mix-blend-overlay pointer-events-none bg-[url('https://res.cloudinary.com/dqr68f51j/image/upload/v1714400000/noise_ntn2m4.png')]" />
+
 			{/* Cinematic vignette */}
-			<div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(4,4,9,0.4)_50%,rgba(4,4,9,0.95)_100%)] pointer-events-none" />
+			<div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(4,4,9,0.5)_50%,rgba(4,4,9,0.98)_100%)] pointer-events-none" />
 			
-			{/* Scanline */}
-			<div className="absolute inset-0 opacity-[0.012] pointer-events-none"
-				 style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px)' }} />
+			{/* Scanlines (Dynamic) */}
+			<div className="absolute inset-0 opacity-[0.015] pointer-events-none">
+				<div className="w-full h-full bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,rgba(255,255,255,0.05)_2px,rgba(255,255,255,0.05)_4px)]" />
+			</div>
 		</div>
 	);
 }
