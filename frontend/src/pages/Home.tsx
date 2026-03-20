@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
 import { GradientDots } from '@/components/ui/gradient-dots';
 import StatGrid from '../components/CommandCenter/StatGrid';
@@ -17,7 +17,7 @@ const stagger = {
 };
 const fadeUp = {
     hidden: { opacity: 0, y: 50, filter: 'blur(8px)' },
-    show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] } },
+    show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.9, ease: "easeOut" as const } },
 };
 
 const TypeWriter = ({ text, className }: { text: string; className?: string }) => {
@@ -59,7 +59,7 @@ const Home = () => {
     const mx = useMotionValue(0);
     const my = useMotionValue(0);
     const sx = useSpring(mx, { stiffness: 40, damping: 15 });
-    const sy = useSpring(my, { stiffness: 40, damping: 15 });
+    useSpring(my, { stiffness: 40, damping: 15 });
     useEffect(() => {
         const handler = (e: MouseEvent) => {
             mx.set((e.clientX - window.innerWidth / 2) * 0.012);
@@ -265,9 +265,12 @@ const Home = () => {
                                 <StatGrid stats={{
                                     total: history.length,
                                     critical: history.filter(h => h.risk_level === 'Critical').length,
-                                    avgAttendance: history.length > 0
-                                        ? `${Math.round(history.reduce((a: number, b: any) => a + b.attendance, 0) / history.length)}%`
-                                        : '0%'
+                                    avgAttendance: (() => {
+                                        const validEntries = history.filter(h => h.attendance != null && !isNaN(h.attendance));
+                                        if (validEntries.length === 0) return '0%';
+                                        const avg = validEntries.reduce((a: number, b: any) => a + Number(b.attendance), 0) / validEntries.length;
+                                        return isNaN(avg) ? '0%' : `${Math.round(avg)}%`;
+                                    })()
                                 }} />
                                 <div className="panel-glass rounded-3xl p-1.5 relative">
                                     <MainDashboard history={history} />
