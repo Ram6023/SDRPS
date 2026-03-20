@@ -69,6 +69,17 @@ COE PROJECT/
 
 ---
 
+## 📈 Risk Assessment Metrics
+
+The system categorizes dropout probability into four distinct tiers, allowing for prioritized institutional response:
+
+| Probability Range | Risk Level | Status | Administrative Action |
+| :--- | :--- | :--- | :--- |
+| **0.0% - 29.9%** | **Low** | ✅ Stable | Standard academic monitoring. |
+| **30.0% - 59.9%** | **Moderate** | ⚠️ Watchlist | Early-stage mentor allocation. |
+| **60.0% - 84.9%** | **High** | 🚨 At Risk | Immediate counselor intervention required. |
+| **85.0% - 100.0%** | **Critical** | ⛔ Urgent | Emergency faculty-parent collaboration. |
+
 ---
 
 ## 🚀 Deployment & Local Setup
