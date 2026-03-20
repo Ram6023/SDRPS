@@ -41,7 +41,33 @@ Our platform transforms raw academic and financial data into a **Premium Intelli
 
 ---
 
-## 🏗️ Intelligence Architecture (COE Protocol)
+## 📂 Project Structure
+
+```text
+COE PROJECT/
+├── api/                    # Vercel Serverless Functions
+│   ├── main.py             # API Entry point
+│   └── model.py            # ML Prediction Logic
+├── backend/                # Local Development Backend
+│   ├── main.py
+│   ├── model.py
+│   └── requirements.txt
+├── frontend/               # React (Vite) Application
+│   ├── api/                # Shadow API for Vercel
+│   ├── src/
+│   │   ├── components/     # UI Components (Command Center, Analytics)
+│   │   ├── pages/          # Application Pages (Home.tsx)
+│   │   ├── services/       # API Communication Layer
+│   │   └── index.css       # Styling & Tailwind Imports
+│   ├── package.json
+│   └── vite.config.ts
+├── dropout_model.pkl       # Trained ML Model Artifact
+├── features.pkl            # Feature Engineering Metadata
+├── Dropout_Risk_Model.ipynb # Research & Model Training Notebook
+└── requirements.txt        # Root dependencies
+```
+
+---
 
 The system calculates a `Dropout Risk Index` (DRI) based on the following weighted vectors:
 
