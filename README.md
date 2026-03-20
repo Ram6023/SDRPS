@@ -1,70 +1,76 @@
-# 🎓 Student Dropout Risk Prediction System
+# 🎓 Student Dropout Risk Prediction System (DropoutAI)
+### An AI-Driven Retention Protocol for Higher Education
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Version](https://img.shields.io/badge/version-1.5.0-emerald.svg)
-![Deployment](https://img.shields.io/badge/platform-Vercel-black.svg)
-![Tailwind](https://img.shields.io/badge/CSS-Tailwindv4-38bdf8.svg)
-
-A premium, ML-powered analytical dashboard designed to forecast student dropout risks using key academic, behavioral, and financial metrics. Built with a focus on modern aesthetics (Glassmorphism 2.0), actionable insights, and high-performance data visualization.
+[![Live Demo](https://img.shields.io/badge/Live%20Application-Vercel-000000?style=for-the-badge&logo=vercel)](https://student-dropout-risk-prediction.vercel.app/)
+[![Project Status](https://img.shields.io/badge/COE%20Program-Active-emerald?style=for-the-badge)](https://github.com/Ram6023/Student-Dropout-Risk-Prediction-System)
+[![Tech Stack](https://img.shields.io/badge/Architecture-FastAPI%20%7C%20React%20%7C%20TS-6366f1?style=for-the-badge)](https://github.com/Ram6023/Student-Dropout-Risk-Prediction-System)
 
 ---
 
-## ✨ Key Features
+## 🏛️ Project Overview
+This initiative was developed under the **Centre of Excellence (COE)** program as a mission-critical tool for academic institutions. **DropoutAI** leverages a multi-vector heuristic machine learning model to proactively identify students at risk of attrition, enabling institutions to implement targeted intervention strategies before dropout occurs.
 
-- **🚀 Intelligent Risk Forecasting**: Real-time neural prediction engine analyzing student behavior and performance.
-- **📊 Interactive Analytics Hub**: Comprehensive overview of student cohorts with interactive charts and historical trends.
-- **🔍 Deep Factor Analysis**: Detailed diagnostic breakdown using 4 core vectors (Attendance, Sem 1 CGPA, Sem 2 CGPA, and Financial Status).
-- **📥 Mass Data Stream**: Support for bulk CSV processing to analyze entire departments or college batches instantly.
-- **💎 Premium Dashboard Experience**: Clean dark-mode UI powered by Framer Motion, featuring progressive blur headers and aurora-grid backgrounds.
-- **💡 Context-Aware Recommendations**: Automated behavioral guidance based on specific risk factors identified.
+Our platform transforms raw academic and financial data into a **Premium Intelligence Dashboard**, providing administrators with a clear, actionable diagnostic of their student body's health.
 
 ---
 
-## 🛠️ Tech Stack
+## ✨ Enterprise Features
 
-### **Frontend (Modern SPA)**
-- **React 18 + Vite**: Lightning-fast development and optimized production builds.
-- **TypeScript**: Strict type-safety across the entire frontend architecture.
-- **Tailwind CSS v4**: Next-gen utility-first styling with high-performance CSS-in-JS.
-- **Framer Motion**: Smooth, high-end micro-animations and page transitions.
-- **Lucide React**: Premium icon set for consistent visual language.
-
-### **Backend (High-Performance API)**
-- **FastAPI**: Asynchronous Python framework for rapid, scalable API development.
-- **Weighted Sigmoid Model**: Sophisticated heuristic-based regression algorithm for precise probability forecasting.
-- **Pandas**: Advanced data manipulation for bulk processing and CSV analysis.
-- **Pydantic**: Robust data validation and automated documentation.
+- **🚀 Neural Risk Forecasting**: Real-time diagnostic engine generating accurate dropout probability scores.
+- **📊 360° Analytical Dashboard**: A high-end visualization suite for monitoring cohort trends, critical alerts, and attendance metrics.
+- **🔍 Diagnostic Vector Analysis**: Deep-dive assessment across four critical success pillars (Attendance, Pre-requisite CGPA, Financial Compliance).
+- **📥 Unified Data Ingestion**: Secure mass-processing support for institutional CSV records to analyze entire departments in seconds.
+- **💎 Glassmorphism 2.0 UI**: An elite, dark-mode administrative interface powered by Framer Motion, featuring progressive blur headers and adaptive layouts.
+- **💡 Automated Intervention Protocols**: Intelligent, context-aware recommendations generated based on specific risk signatures.
 
 ---
 
-## 🏗️ Intelligence Architecture
+## 🛠️ Technological Infrastructure
 
-The system utilizes a multi-vector heuristic model to calculate the `Dropout Probability Index`:
+### **Frontend & Visual Systems**
+- **Core**: React 18 + Vite (optimized for sub-second page loads).
+- **Type Safety**: TypeScript implementation across all data interfaces.
+- **Design System**: Tailwind CSS v4 featuring ultra-modern utility-first styling.
+- **Motion**: Framer Motion for high-fidelity micro-interactions and transitions.
 
-1.  **Attendance Vector (40% Weighting)**: Critical threshold monitored at 60% with exponential risk scaling.
-2.  **Academic Vector (40% Weighting)**: Joint analysis of Semantic 1 and 2 performance, tracking stability and trends.
-3.  **Financial Vector (20% Weighting)**: Binary assessment of outstanding fees and their impact on retention.
-
-Each profile is categorized into one of four risk tiers: **Low**, **Moderate**, **High**, or **Critical**, generating immediate intervention protocols.
+### **Backend & Intelligence Layer**
+- **Framework**: FastAPI (High-performance asynchronous Python REST API).
+- **Core Model**: Weighted Sigmoid Regression Heuristic (Proprietary weights optimized for educational datasets).
+- **Processing**: Pandas and NumPy for high-concurrency data manipulation.
+- **Integrity**: Pydantic for rigid schema enforcement and validation.
 
 ---
 
-## 🚀 Installation & Local Development
+## 🏗️ Intelligence Architecture (COE Protocol)
 
-### **1. Clone the repository**
+The system calculates a `Dropout Risk Index` (DRI) based on the following weighted vectors:
+
+| Factor | Weight | Critical Threshold | Description |
+| :--- | :--- | :--- | :--- |
+| **Attendance** | 40% | < 60% | Primary indicator of student disengagement. |
+| **Academic Stability** | 40% | < 4.0 CGPA | Joint analysis of Sem 1 & Sem 2 performance and trends. |
+| **Financial Health** | 20% | Unpaid Status | Evaluation of fee compliance impact on retention. |
+
+Each profile is classified into institutional risk tiers: **Low**, **Moderate**, **High**, or **Critical**, triggering respective administrative action.
+
+---
+
+## 🚀 Deployment & Local Setup
+
+### **1. Environment Provisioning**
 ```bash
 git clone https://github.com/Ram6023/Student-Dropout-Risk-Prediction-System.git
 cd Student-Dropout-Risk-Prediction-System
 ```
 
-### **2. Setup Backend (Virtual Env recommended)**
+### **2. API Infrastructure (Backend)**
 ```bash
-# From root
+# Recommended: python -m venv venv
 pip install -r requirements.txt
-uvicorn api.main:app --reload
+uvicorn api.main:app --host 0.0.0.0 --port 8000
 ```
 
-### **3. Setup Frontend**
+### **3. Application Interface (Frontend)**
 ```bash
 cd frontend
 npm install
@@ -73,28 +79,24 @@ npm run dev
 
 ---
 
-## 👥 Team Members
+## 👥 COE Program Development Team
 
-This project was developed by the following team members:
+This system was conceptualized and engineered for the COE program by:
 
-- **SRIRAM**
-- **PRAVALIKA REDDY** 
-- **SRINIVAS**
-
----
-
-## ☁️ Deployment
-
-Optimized for **Vercel** as a unified monorepo:
-- **Client**: React / Vite (Root: `frontend`)
-- **API**: FastAPI Serverless functions (Path: `api/`)
+*   **🎓 SRIRAM**
+*   **🎓 PRAVALIKA REDDY**
+*   **🎓 SRINIVAS**
 
 ---
 
-## 📄 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
+## ☁️ Cloud Infrastructure
+The project is architected for **Vercel's Global Edge Network**, utilizing serverless Python functions for high-concurrency API demands and globally distributed static assets for the application layer.
 
 ---
 
-Developed with ❤️ for Advanced Student Success Monitoring.
+## 📄 Licensing & Governance
+Distributed under the **MIT License**. For official institutional collaboration or academic inquiries, please contact the development team.
+
+---
+
+**Developed for the Centre of Excellence (COE) | © 2026 DropoutAI Systems**
