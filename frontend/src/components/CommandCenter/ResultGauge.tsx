@@ -13,13 +13,13 @@ const ResultGauge: React.FC<ResultGaugeProps> = ({ probability, riskLevel }) => 
   const getColor = () => {
     if (riskLevel === 'Critical') return '#f43f5e';
     if (riskLevel === 'High') return '#f59e0b';
-    if (riskLevel === 'Moderate') return '#06b6d4';
+    if (riskLevel === 'Moderate') return '#8b5cf6'; // Updated: Moderate -> Amethyst/Violet
     return '#10b981';
   };
 
   const hexToRgb = (hex: string) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '6, 182, 212';
+    return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '139, 92, 246';
   };
 
   const color = getColor();

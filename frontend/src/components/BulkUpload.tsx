@@ -72,14 +72,14 @@ const BulkUpload: React.FC<BulkUploadProps> = ({ onResult }) => {
 
   return (
     <div className="w-full max-w-2xl mx-auto py-8">
-      <TiltCard glowColor="6, 182, 212" className="w-full">
+      <TiltCard glowColor="139, 92, 246" className="w-full">
         <div className="panel-glass rounded-[2rem] p-10 sm:p-14 relative overflow-hidden h-full" style={{ transformStyle: 'preserve-3d' }}>
-          <div className="absolute top-0 right-0 w-80 h-80 bg-accent-400/5 blur-[100px] rounded-full pointer-events-none" />
+          <div className="absolute top-0 right-0 w-80 h-80 bg-accent-500/5 blur-[100px] rounded-full pointer-events-none" />
           
           <div className="space-y-10" style={{ transform: 'translateZ(20px)' }}>
             <header className="text-center space-y-3">
               <div className="flex justify-center mb-2" style={{ transform: 'translateZ(10px)' }}>
-                <div className="p-3 rounded-2xl bg-accent-400/10 text-accent-400 ring-1 ring-accent-400/20">
+                <div className="p-3 rounded-2xl bg-accent-500/10 text-accent-400 ring-1 ring-accent-400/20">
                   <FileSpreadsheet className="w-6 h-6" />
                 </div>
               </div>
@@ -98,7 +98,7 @@ const BulkUpload: React.FC<BulkUploadProps> = ({ onResult }) => {
                       ? 'border-accent-400 scale-[0.98]' 
                       : 'border-white/[0.04] bg-black/20 hover:border-white/10'
               )}
-              style={dragActive ? { background: 'rgba(6,182,212,0.04)' } : { transform: 'translateZ(10px)' }}
+              style={dragActive ? { background: 'rgba(139,92,246,0.06)' } : { transform: 'translateZ(10px)' }}
             >
               <input type="file" accept=".csv" onChange={(e) => e.target.files && validateAndSetFile(e.target.files[0])} className="absolute inset-0 opacity-0 cursor-pointer z-10" />
               
@@ -114,7 +114,7 @@ const BulkUpload: React.FC<BulkUploadProps> = ({ onResult }) => {
                   )}
                   style={file 
                       ? { background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.15)', transform: 'translateZ(20px)' }
-                      : { background: 'rgba(5,8,16,0.8)', border: '1px solid rgba(255,255,255,0.06)', transform: 'translateZ(20px)' }
+                      : { background: 'rgba(4,4,9,0.8)', border: '1px solid rgba(255,255,255,0.06)', transform: 'translateZ(20px)' }
                   }
                 >
                   {file ? <CheckCircle className="w-10 h-10" /> : <CloudUpload className="w-10 h-10" />}
@@ -134,7 +134,7 @@ const BulkUpload: React.FC<BulkUploadProps> = ({ onResult }) => {
                  <div className="mt-12 flex flex-wrap justify-center gap-3 opacity-30 group-hover:opacity-80 transition-all duration-700" style={{ transform: 'translateZ(5px)' }}>
                     {['attendance', 'cgpa', 'fees'].map(t => (
                         <span key={t} className="px-4 py-2 rounded-xl text-[9px] font-black text-slate-500 uppercase tracking-widest"
-                              style={{ background: 'rgba(5,8,16,0.8)', border: '1px solid rgba(255,255,255,0.04)' }}>{t}</span>
+                              style={{ background: 'rgba(4,4,9,0.8)', border: '1px solid rgba(255,255,255,0.04)' }}>{t}</span>
                     ))}
                  </div>
               )}

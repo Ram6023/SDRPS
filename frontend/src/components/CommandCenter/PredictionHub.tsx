@@ -48,7 +48,7 @@ const PredictionHub: React.FC<PredictionHubProps> = ({ onSubmit, loading }) => {
         <div className="absolute top-1/2 left-0 w-full h-[1px] -translate-y-1/2 z-0" style={{ background: 'rgba(255,255,255,0.06)' }} />
         <motion.div 
             className="absolute top-1/2 left-0 h-[1.5px] -translate-y-1/2 z-0 origin-left"
-            style={{ width: '100%', background: 'linear-gradient(90deg, #06b6d4, #22d3ee)', boxShadow: '0 0 10px rgba(6,182,212,0.4)' }}
+            style={{ width: '100%', background: 'linear-gradient(90deg, #8b5cf6, #a78bfa)', boxShadow: '0 0 10px rgba(139,92,246,0.4)' }}
             initial={{ scaleX: 0 }}
             animate={{ scaleX: (step - 1) / 3 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -67,10 +67,10 @@ const PredictionHub: React.FC<PredictionHubProps> = ({ onSubmit, loading }) => {
                     : 'text-slate-600 border border-white/[0.04]'
                 )}
                 style={step >= s.id ? { 
-                    background: 'linear-gradient(135deg, #06b6d4, #0891b2)',
-                    boxShadow: '0 0 25px rgba(6,182,212,0.3)',
+                    background: 'linear-gradient(135deg, #8b5cf6, #7c3aed)',
+                    boxShadow: '0 0 25px rgba(139,92,246,0.3)',
                     transform: 'translateZ(10px)'
-                } : { background: 'rgba(12,18,30,0.8)' }}
+                } : { background: 'rgba(12,12,22,0.8)' }}
             >
               {step > s.id ? <Check className="w-6 h-6 stroke-[3px]" /> : <s.icon className="w-5 h-5" />}
             </motion.button>
@@ -85,10 +85,10 @@ const PredictionHub: React.FC<PredictionHubProps> = ({ onSubmit, loading }) => {
       </div>
 
       {/* Form with 3D Tilt */}
-      <TiltCard glowColor="6, 182, 212" className="w-full">
+      <TiltCard glowColor="139, 92, 246" className="w-full">
         <form onSubmit={handleSubmit} className="panel-glass rounded-[2rem] p-10 sm:p-14 relative overflow-hidden" style={{ transformStyle: 'preserve-3d' }}>
-          <div className="absolute top-0 left-0 w-full h-[1px]" style={{ background: 'linear-gradient(90deg, transparent, rgba(6,182,212,0.4), transparent)' }} />
-          <div className="absolute -top-10 -right-10 w-40 h-40 bg-accent-400/5 blur-3xl rounded-full" />
+          <div className="absolute top-0 left-0 w-full h-[1px]" style={{ background: 'linear-gradient(90deg, transparent, rgba(139,92,246,0.4), transparent)' }} />
+          <div className="absolute -top-10 -right-10 w-40 h-40 bg-accent-500/5 blur-3xl rounded-full" />
           
           <AnimatePresence mode="wait">
             <motion.div
@@ -162,7 +162,7 @@ const Header = ({ title, desc, icon: Icon }: any) => (
     <div className="space-y-2" style={{ transform: 'translateZ(10px)' }}>
         <div className="flex items-center gap-3 text-accent-400 mb-1">
           <Icon className="w-4.5 h-4.5" />
-          <div className="text-[10px] font-black uppercase tracking-widest bg-accent-400/15 px-2 py-0.5 rounded flex items-center gap-1.5">
+          <div className="text-[10px] font-black uppercase tracking-widest bg-accent-500/15 px-2 py-0.5 rounded flex items-center gap-1.5">
             <Sparkles className="w-2.5 h-2.5" /> Phase Data
           </div>
         </div>
@@ -178,13 +178,13 @@ const InputGroup = ({ label, ...props }: any) => (
           <input {...props} required
               className="w-full text-white px-8 py-5 rounded-2xl outline-none transition-all font-black placeholder:text-slate-800 text-xl"
               style={{ 
-                  background: 'rgba(12,18,30,0.85)', 
+                  background: 'rgba(12,12,22,0.85)', 
                   border: '1px solid rgba(255,255,255,0.08)',
                   boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.2)'
               }}
               onFocus={(e: any) => { 
-                e.target.style.borderColor = 'rgba(6,182,212,0.4)'; 
-                e.target.style.boxShadow = '0 0 0 5px rgba(6,182,212,0.06), inset 0 2px 4px rgba(0,0,0,0.2)'; 
+                e.target.style.borderColor = 'rgba(139,92,246,0.4)'; 
+                e.target.style.boxShadow = '0 0 0 5px rgba(139,92,246,0.06), inset 0 2px 4px rgba(0,0,0,0.2)'; 
               }}
               onBlur={(e: any) => { 
                 e.target.style.borderColor = 'rgba(255,255,255,0.08)'; 
@@ -204,8 +204,8 @@ const SelectBox = ({ active, onClick, label, desc }: any) => (
             active ? 'text-white' : 'hover:border-white/12'
         )}
         style={active 
-            ? { background: 'linear-gradient(135deg, rgba(6,182,212,0.15), rgba(8,145,178,0.15))', border: '1px solid rgba(6,182,212,0.4)', boxShadow: '0 0 30px rgba(6,182,212,0.12)' }
-            : { background: 'rgba(12,18,30,0.85)', border: '1px solid rgba(255,255,255,0.08)' }
+            ? { background: 'linear-gradient(135deg, rgba(139,92,246,0.15), rgba(124,58,237,0.15))', border: '1px solid rgba(139,92,246,0.4)', boxShadow: '0 0 30px rgba(139,92,246,0.12)' }
+            : { background: 'rgba(12,12,22,0.85)', border: '1px solid rgba(255,255,255,0.08)' }
         }
     >
         <div className={cn("absolute top-6 right-6 w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-700",

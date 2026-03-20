@@ -21,7 +21,7 @@ const AnimatedNumber: React.FC<{ value: number }> = ({ value }) => {
 
 const StatGrid: React.FC<StatGridProps> = ({ stats }) => {
   const cards = [
-    { label: 'Total Analyzed', value: stats?.total || 0, icon: Users, glow: '6, 182, 212', iconBg: 'bg-cyan-500/10 ring-1 ring-cyan-500/20', iconColor: 'text-cyan-400', tag: 'Live', tagBg: 'text-cyan-400/70 bg-cyan-500/5', isNumber: true },
+    { label: 'Total Analyzed', value: stats?.total || 0, icon: Users, glow: '139, 92, 246', iconBg: 'bg-accent-500/10 ring-1 ring-accent-500/20', iconColor: 'text-accent-400', tag: 'Live', tagBg: 'text-accent-400/70 bg-accent-500/5', isNumber: true },
     { label: 'Critical Risk', value: stats?.critical || 0, icon: UserX, glow: '244, 63, 94', iconBg: 'bg-rose-500/10 ring-1 ring-rose-500/20', iconColor: 'text-rose-400', tag: 'Alert', tagBg: 'text-rose-400/70 bg-rose-500/5', isNumber: true },
     { label: 'Avg Attendance', value: stats?.avgAttendance || '0%', icon: Activity, glow: '251, 191, 36', iconBg: 'bg-amber-500/10 ring-1 ring-amber-500/20', iconColor: 'text-amber-400', tag: 'Avg', tagBg: 'text-amber-400/70 bg-amber-500/5', isNumber: false },
     { label: 'Model Accuracy', value: '98.2%', icon: Brain, glow: '16, 185, 129', iconBg: 'bg-emerald-500/10 ring-1 ring-emerald-500/20', iconColor: 'text-emerald-400', tag: 'Stable', tagBg: 'text-emerald-400/70 bg-emerald-500/5', isNumber: false }

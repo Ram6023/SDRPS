@@ -49,7 +49,7 @@ const Home = () => {
     const [currentResult, setCurrentResult] = useState<any>(null);
 
     const { scrollY } = useScroll();
-    const headerBg = useTransform(scrollY, [0, 60], ['rgba(5,8,16,0)', 'rgba(5,8,16,0.92)']);
+    const headerBg = useTransform(scrollY, [0, 60], ['rgba(4,4,9,0)', 'rgba(4,4,9,0.92)']);
     const headerBlur = useTransform(scrollY, [0, 60], [0, 16]);
     const headerBorder = useTransform(scrollY, [0, 60], ['rgba(255,255,255,0)', 'rgba(255,255,255,0.04)']);
 
@@ -100,7 +100,7 @@ const Home = () => {
     ];
 
     return (
-        <div className="relative min-h-screen bg-[#050810] text-slate-400 overflow-x-hidden" style={{ perspective: '1200px' }}>
+        <div className="relative min-h-screen bg-[#040409] text-slate-400 overflow-x-hidden" style={{ perspective: '1200px' }}>
             <GradientDots className="opacity-80" />
 
             {/* ── Sticky Glass Header ── */}
@@ -116,14 +116,14 @@ const Home = () => {
                     <motion.div className="flex items-center gap-3 cursor-pointer" onClick={() => setActiveTab('dashboard')} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                         <motion.div
                             className="w-9 h-9 rounded-xl flex items-center justify-center text-white"
-                            style={{ background: 'linear-gradient(135deg, #06b6d4, #0891b2)' }}
-                            animate={{ boxShadow: ['0 0 15px rgba(6,182,212,0.15)', '0 0 30px rgba(6,182,212,0.3)', '0 0 15px rgba(6,182,212,0.15)'] }}
+                            style={{ background: 'linear-gradient(135deg, #8b5cf6, #7c3aed)' }}
+                            animate={{ boxShadow: ['0 0 15px rgba(139,92,246,0.15)', '0 0 30px rgba(139,92,246,0.3)', '0 0 15px rgba(139,92,246,0.15)'] }}
                             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                         >
                             <Sparkles className="w-5 h-5" />
                         </motion.div>
                         <div className="hidden sm:block">
-                            <h1 className="text-white font-bold text-sm tracking-wide leading-none">Dropout<span className="text-cyan-400">AI</span></h1>
+                            <h1 className="text-white font-bold text-sm tracking-wide leading-none">Dropout<span className="text-accent-400">AI</span></h1>
                             <span className="text-[9px] text-slate-600 font-medium tracking-wider">COE Program</span>
                         </div>
                     </motion.div>
@@ -133,9 +133,9 @@ const Home = () => {
                             <motion.button key={tab.id} onClick={() => setActiveTab(tab.id)} whileTap={{ scale: 0.95 }}
                                 className={cn("px-4 py-2 rounded-lg text-[11px] font-semibold transition-all duration-300 flex items-center gap-2 relative", activeTab === tab.id ? "text-white" : "text-slate-500 hover:text-slate-300")}>
                                 {activeTab === tab.id && (
-                                    <motion.div layoutId="pill" className="absolute inset-0 rounded-lg" style={{ background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.15)' }} transition={{ type: "spring", stiffness: 400, damping: 30 }} />
+                                    <motion.div layoutId="pill" className="absolute inset-0 rounded-lg" style={{ background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.15)' }} transition={{ type: "spring", stiffness: 400, damping: 30 }} />
                                 )}
-                                <tab.icon className={cn("w-3.5 h-3.5 relative z-10", activeTab === tab.id && "text-cyan-400")} />
+                                <tab.icon className={cn("w-3.5 h-3.5 relative z-10", activeTab === tab.id && "text-accent-400")} />
                                 <span className="relative z-10">{tab.label}</span>
                             </motion.button>
                         ))}
@@ -150,7 +150,7 @@ const Home = () => {
                     </div>
                     <motion.div whileHover={{ scale: 1.1 }} className="relative cursor-pointer p-2 rounded-lg hover:bg-white/5 transition-colors">
                         <Bell className="w-4 h-4 text-slate-500" />
-                        <motion.span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-cyan-400 rounded-full" animate={{ scale: [1, 1.5, 1] }} transition={{ duration: 2, repeat: Infinity }} />
+                        <motion.span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-accent-500 rounded-full" animate={{ scale: [1, 1.5, 1] }} transition={{ duration: 2, repeat: Infinity }} />
                     </motion.div>
                     <motion.div whileHover={{ scale: 1.05 }} className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-500 hover:text-white cursor-pointer transition-all" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
                         <User className="w-4 h-4" />
@@ -177,9 +177,9 @@ const Home = () => {
                         transition={{ duration: 1, delay: 0.1 }}
                         className="flex justify-center mb-8"
                     >
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-semibold text-cyan-400 tracking-wider backdrop-blur-md"
-                             style={{ background: 'rgba(6,182,212,0.08)', border: '1px solid rgba(6,182,212,0.15)' }}>
-                            <motion.span className="w-1.5 h-1.5 rounded-full bg-cyan-400" animate={{ scale: [1, 1.5, 1], opacity: [1, 0.4, 1] }} transition={{ duration: 2, repeat: Infinity }} />
+                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-semibold text-accent-400 tracking-wider backdrop-blur-md"
+                             style={{ background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.15)' }}>
+                            <motion.span className="w-1.5 h-1.5 rounded-full bg-accent-400" animate={{ scale: [1, 1.5, 1], opacity: [1, 0.4, 1] }} transition={{ duration: 2, repeat: Infinity }} />
                             CENTRE OF EXCELLENCE — LIVE
                         </div>
                     </motion.div>
@@ -254,7 +254,7 @@ const Home = () => {
                     </motion.div>
 
                     {/* Decorative floating lines */}
-                    <motion.div className="absolute -left-16 top-24 w-[2px] rounded-full bg-gradient-to-b from-cyan-500/30 to-transparent pointer-events-none"
+                    <motion.div className="absolute -left-16 top-24 w-[2px] rounded-full bg-gradient-to-b from-accent-500/30 to-transparent pointer-events-none"
                         animate={{ height: [60, 100, 60], opacity: [0.3, 0.6, 0.3] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} />
                     <motion.div className="absolute -right-12 top-40 w-[1.5px] rounded-full bg-gradient-to-b from-amber-500/20 to-transparent pointer-events-none"
                         animate={{ height: [50, 80, 50], opacity: [0.2, 0.4, 0.2] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }} />
@@ -300,9 +300,9 @@ const Home = () => {
                                         <><ResultGauge probability={currentResult.probability} riskLevel={currentResult.risk_level} /><AIExplanation result={currentResult} /></>
                                     ) : (
                                         <motion.div className="panel-glass rounded-3xl p-14 text-center flex flex-col items-center justify-center min-h-[480px]" style={{ border: '1px dashed rgba(255,255,255,0.06)' }}
-                                            animate={{ borderColor: ['rgba(255,255,255,0.06)', 'rgba(6,182,212,0.12)', 'rgba(255,255,255,0.06)'] }} transition={{ duration: 4, repeat: Infinity }}>
+                                            animate={{ borderColor: ['rgba(255,255,255,0.06)', 'rgba(139,92,246,0.12)', 'rgba(255,255,255,0.06)'] }} transition={{ duration: 4, repeat: Infinity }}>
                                             <motion.div className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 text-slate-600"
-                                                style={{ background: 'rgba(6,182,212,0.05)', border: '1px solid rgba(6,182,212,0.1)' }}
+                                                style={{ background: 'rgba(139,92,246,0.05)', border: '1px solid rgba(139,92,246,0.1)' }}
                                                 animate={{ rotate: [0, 3, -3, 0] }} transition={{ duration: 6, repeat: Infinity }}>
                                                 <Search className="w-8 h-8" />
                                             </motion.div>
@@ -324,18 +324,18 @@ const Home = () => {
             <CinematicReveal>
                 <footer className="max-w-6xl mx-auto px-6 py-12 flex flex-col md:flex-row justify-between items-center gap-6 relative z-10" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
                     <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg flex items-center justify-center text-cyan-400" style={{ background: 'rgba(6,182,212,0.1)' }}><Sparkles className="w-4 h-4" /></div>
+                        <div className="w-8 h-8 rounded-lg flex items-center justify-center text-accent-400" style={{ background: 'rgba(139,92,246,0.1)' }}><Sparkles className="w-4 h-4" /></div>
                         <div>
                             <div className="text-[11px] font-bold text-white tracking-wide">DropoutAI &bull; COE Program</div>
                             <div className="text-[10px] text-slate-600">Student Success Intelligence</div>
                         </div>
                     </div>
                     <div className="flex gap-8 text-[10px] font-medium text-slate-600">
-                        <a href="#" className="hover:text-cyan-400 transition-colors">Docs</a>
-                        <a href="#" className="hover:text-cyan-400 transition-colors">API</a>
-                        <a href="#" className="hover:text-cyan-400 transition-colors">Team</a>
+                        <a href="#" className="hover:text-accent-400 transition-colors">Docs</a>
+                        <a href="#" className="hover:text-accent-400 transition-colors">API</a>
+                        <a href="#" className="hover:text-accent-400 transition-colors">Team</a>
                     </div>
-                    <div className="text-[10px] text-slate-700 text-center md:text-right">© 2026 DropoutAI<br/><span className="text-cyan-500/30">Centre of Excellence</span></div>
+                    <div className="text-[10px] text-slate-700 text-center md:text-right">© 2026 DropoutAI<br/><span className="text-accent-500/30">Centre of Excellence</span></div>
                 </footer>
             </CinematicReveal>
         </div>

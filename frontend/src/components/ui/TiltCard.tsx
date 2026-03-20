@@ -7,7 +7,7 @@ interface TiltCardProps {
   glowColor?: string;
 }
 
-const TiltCard: React.FC<TiltCardProps> = ({ children, className = '', glowColor = '6, 182, 212' }) => {
+const TiltCard: React.FC<TiltCardProps> = ({ children, className = '', glowColor = '139, 92, 246' }) => {
   const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0.5);
   const y = useMotionValue(0.5);
