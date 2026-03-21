@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import TiltCard from '@/components/ui/TiltCard';
 import { cn } from '@/lib/utils';
 
+import Ticker from '@/components/Ticker';
+
 const FeatureBlock = ({ title, desc, icon: Icon, color, reverse = false, pattern = 'bg-grid-cyber', path }: any) => (
     <section className="w-full py-20 relative overflow-hidden flex items-center px-6 lg:px-12 group">
         <div className={cn("absolute inset-0 opacity-10", pattern)} />
@@ -85,6 +87,9 @@ const LandingPage: React.FC = () => {
                      <span className="text-[8px] font-mono tracking-widest font-bold text-slate-600 uppercase">SCROLL</span>
                 </motion.div>
             </section>
+
+            {/* Live Data Ticker */}
+            <Ticker />
 
             {/* Feature Blocks */}
             <FeatureBlock title="RISK_DASHBOARD" desc="Real-time data visualization of institutional attrition vectors and student success metrics." icon={LayoutDashboard} color="text-sunset-amber" pattern="bg-grid-cyber" path="/dashboard" />
