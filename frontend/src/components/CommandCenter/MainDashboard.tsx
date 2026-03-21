@@ -1,161 +1,172 @@
 import React from 'react';
-import { 
-  LineChart, Line, AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell, BarChart, Bar
-} from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
 import { motion } from 'framer-motion';
+import { Activity, TrendingUp, Users, AlertCircle, Sparkles, Database } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import TiltCard from '@/components/ui/TiltCard';
 
 interface MainDashboardProps {
   history?: any[];
 }
 
-const MainDashboard: React.FC<MainDashboardProps> = ({ history }) => {
-  const hasData = history && history.length > 0;
-
-  const lineData = hasData
-    ? history.map((h, i) => ({ name: `S${i+1}`, value: Math.round(h.probability * 100) }))
-    : [{ name: 'N/A', value: 0 }];
-
-  const riskLevels = hasData ? history.reduce((acc: any, curr) => {
-    acc[curr.risk_level] = (acc[curr.risk_level] || 0) + 1;
-    return acc;
-  }, {}) : {};
-
-  const pieData = hasData
-    ? Object.keys(riskLevels).map(level => ({ name: level, value: riskLevels[level] }))
-    : [{ name: 'No Data', value: 1 }];
-
-  const avgAttendance = hasData ? (history.filter(h => h.attendance != null).reduce((a, b) => a + Number(b.attendance), 0) / history.filter(h => h.attendance != null).length || 0) : 0;
-  const avgRisk = hasData ? (history.reduce((a, b) => a + b.probability, 0) / history.length) * 100 : 0;
-
-  const barData = [
-    { label: 'Attendance', value: Math.round(avgAttendance) },
-    { label: 'Risk', value: Math.round(avgRisk) },
-    { label: 'Coverage', value: hasData ? 100 : 0 },
+const MainDashboard: React.FC<MainDashboardProps> = ({ history = [] }) => {
+  const chartData = history.length > 5 ? history.slice(0, 10).reverse() : [
+    { name: '08:00', risk: 45, confidence: 92 },
+    { name: '10:00', risk: 52, confidence: 88 },
+    { name: '12:00', risk: 48, confidence: 94 },
+    { name: '14:00', risk: 61, confidence: 91 },
+    { name: '16:00', risk: 55, confidence: 95 },
   ];
 
-  // Updated COLORS to Amethyst/Violet theme
-  const COLORS = ['#8b5cf6', '#10b981', '#f59e0b', '#f43f5e'];
-
-  return (
-    <div className="grid grid-cols-12 gap-6 p-6">
-      {/* Area Chart */}
-      <ChartCard title="Risk Probability Trends" span="col-span-12 lg:col-span-8" glowColor="139, 92, 246">
-        <ResponsiveContainer width="100%" height={240} minWidth={0}>
-          <AreaChart data={lineData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-            <defs>
-              <linearGradient id="colorViolet" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
-              </linearGradient>
-            </defs>
-            <XAxis dataKey="name" stroke="#334155" fontSize={10} tickLine={false} axisLine={false} dy={10} />
-            <YAxis stroke="#334155" fontSize={10} tickLine={false} axisLine={false} dx={-10} />
-            <Tooltip content={<CustomTooltip />} cursor={{stroke: '#8b5cf6', strokeWidth: 1, strokeDasharray: '4 4'}} />
-            <Area type="monotone" dataKey="value" stroke="#8b5cf6" strokeWidth={3} fillOpacity={1} fill="url(#colorViolet)" animationDuration={1800} />
-          </AreaChart>
-        </ResponsiveContainer>
-      </ChartCard>
-
-      {/* Pie Chart */}
-      <ChartCard title="Risk Distribution" span="col-span-12 lg:col-span-4" glowColor={hexToRgb(COLORS[0])}>
-        <div className="h-[240px] flex items-center justify-center relative" style={{ transformStyle: 'preserve-3d' }}>
-          <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-            <PieChart>
-              <Pie data={pieData} cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={8} dataKey="value" animationDuration={1400} stroke="rgba(255,255,255,0.05)" strokeWidth={2}>
-                {pieData.map((_entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip content={<CustomTooltip />} />
-            </PieChart>
-          </ResponsiveContainer>
-          <div className="absolute inset-0 flex items-center justify-center flex-col pointer-events-none" style={{ transform: 'translateZ(30px)' }}>
-            <span className="text-3xl font-black text-white tracking-widest leading-none mb-1">{Math.round(avgRisk)}%</span>
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Avg Risk</span>
-          </div>
+  const StatPanel = ({ title, val, icon: Icon, color, bg, border }: any) => (
+    <div className={cn("p-10 rounded-[3rem] border backdrop-blur-3xl relative overflow-hidden group/stat transition-all duration-700 hover:bg-white/[0.02] shadow-2xl", bg, border)}>
+        <div className="absolute top-0 right-0 w-32 h-32 bg-white/[0.02] blur-[40px] rounded-full translate-x-1/2 -translate-y-1/2" />
+        <div className="flex items-center justify-between mb-8">
+            <div className={cn("p-4 rounded-xl shadow-2xl", bg)}>
+                <Icon className={cn("w-6 h-6", color)} />
+            </div>
+            <div className="text-[11px] font-mono font-black text-slate-700 tracking-[0.3em] uppercase">{title}</div>
         </div>
-      </ChartCard>
-
-      {/* Bar Chart */}
-      <ChartCard title="Neural Performance Markers" span="col-span-12 lg:col-span-5" glowColor="16, 185, 129">
-        <ResponsiveContainer width="100%" height={240} minWidth={0}>
-          <BarChart data={barData} layout="vertical" margin={{ top: 10, right: 30, left: 10, bottom: 10 }}>
-            <XAxis type="number" hide />
-            <YAxis dataKey="label" type="category" stroke="#64748b" fontSize={10} width={80} axisLine={false} tickLine={false} />
-            <Tooltip content={<CustomTooltip />} cursor={false} />
-            <Bar dataKey="value" radius={[0, 8, 8, 0]} barSize={20} animationDuration={1400}>
-              {barData.map((_entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} fillOpacity={0.85} stroke={COLORS[index % COLORS.length]} strokeWidth={1} />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-      </ChartCard>
-
-      {/* Line Chart */}
-      <ChartCard title="Academic Engagement Vector" span="col-span-12 lg:col-span-7" glowColor="251, 191, 36">
-        <ResponsiveContainer width="100%" height={240} minWidth={0}>
-          <LineChart data={lineData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-            <XAxis dataKey="name" stroke="#334155" fontSize={10} tickLine={false} axisLine={false} dy={10} />
-            <YAxis stroke="#334155" fontSize={10} tickLine={false} axisLine={false} dx={-10} />
-            <Tooltip content={<CustomTooltip />} />
-            <Line type="monotone" dataKey="value" stroke="#fbbf24" strokeWidth={3} dot={{ r: 4, fill: '#fbbf24', strokeWidth: 0 }}
-                  activeDot={{ r: 6, strokeWidth: 0, fill: '#ffffff' }} animationDuration={1800} />
-          </LineChart>
-        </ResponsiveContainer>
-      </ChartCard>
+        <div className="text-5xl font-black text-white tracking-tighter leading-none mb-3 group-hover/stat:scale-105 transition-transform origin-left duration-700">{val}</div>
+        <div className="flex items-center gap-3 mt-4 opacity-40 group-hover/stat:opacity-100 transition-opacity">
+            <div className="w-2 h-2 rounded-full bg-sunset-amber animate-pulse" />
+            <span className="text-[9px] font-black text-slate-800 tracking-widest uppercase">ENROLLMENT_NODE_SCANNING</span>
+        </div>
     </div>
   );
-};
 
-const hexToRgb = (hex: string) => {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '139, 92, 246';
-};
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+      {/* Risk Trajectory Chart */}
+      <div className="lg:col-span-8">
+        <TiltCard glowColor="245, 158, 11">
+          <div className="panel-glass rounded-[4rem] p-16 h-[700px] flex flex-col relative overflow-hidden border-white/[0.04] shadow-3xl" style={{ transformStyle: 'preserve-3d' }}>
+            <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-sunset-amber/5 blur-[150px] rounded-full translate-x-1/3 -translate-y-1/3 pointer-events-none" />
+            
+            <div className="flex items-center justify-between mb-16" style={{ transform: 'translateZ(30px)' }}>
+                 <div className="flex items-center gap-6">
+                    <div className="p-4 bg-sunset-amber/10 rounded-2xl ring-1 ring-sunset-amber/40 shadow-3xl">
+                        <TrendingUp className="w-8 h-8 text-sunset-amber" />
+                    </div>
+                    <div>
+                        <h3 className="text-4xl font-black text-white tracking-tight leading-none uppercase italic border-l-4 border-sunset-amber pl-6">RISK_TRAJECTORY</h3>
+                        <span className="text-[10px] font-mono font-black text-slate-700 tracking-[0.4em] uppercase ml-6">NEURAL_TEMPORAL_FLOW_V5</span>
+                    </div>
+                 </div>
+                 <div className="flex gap-4">
+                     {['YEARLY', 'MONTHLY', 'REAL_TIME'].map(t => (
+                        <button key={t} className="px-5 py-2 rounded-xl text-[9px] font-black text-slate-700 border border-white/5 hover:bg-white/5 transition-all tracking-[0.2em]">{t}</button>
+                     ))}
+                 </div>
+            </div>
 
-interface ChartCardProps {
-  title: string;
-  children: React.ReactNode;
-  span: string;
-  glowColor?: string;
-}
-
-const ChartCard: React.FC<ChartCardProps> = ({ title, children, span, glowColor }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.8 }}
-    className={span}
-  >
-    <TiltCard glowColor={glowColor} className="h-full">
-      <div className="panel-glass rounded-3xl p-8 relative min-h-[340px] h-full overflow-hidden" style={{ transformStyle: 'preserve-3d' }}>
-        <div className="flex justify-between items-center mb-8" style={{ transform: 'translateZ(20px)' }}>
-          <h3 className="text-[11px] font-black text-slate-500 tracking-[0.2em] uppercase">{title}</h3>
-          <div className="flex gap-1.5 p-1 rounded-md bg-white/[0.03]">
-            {[1,2,3].map(i => <div key={i} className="w-1 h-1 rounded-full bg-slate-700" />)}
+            <div className="flex-1 w-full min-h-[400px]" style={{ transform: 'translateZ(20px)' }}>
+               <ResponsiveContainer width="100%" height="100%">
+                 <AreaChart data={chartData}>
+                   <defs>
+                     <linearGradient id="colorRisk" x1="0" y1="0" x2="0" y2="1">
+                       <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.3}/>
+                       <stop offset="95%" stopColor="#f59e0b" stopOpacity={0}/>
+                     </linearGradient>
+                     <linearGradient id="colorConf" x1="0" y1="0" x2="0" y2="1">
+                       <stop offset="5%" stopColor="#be123c" stopOpacity={0.2}/>
+                       <stop offset="95%" stopColor="#be123c" stopOpacity={0}/>
+                     </linearGradient>
+                   </defs>
+                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.03)" />
+                   <XAxis dataKey="name" stroke="rgba(255,255,255,0.1)" fontSize={10} tick={{fill: 'rgba(255,255,255,0.3)', fontWeight: 'bold'}} axisLine={false} tickLine={false} />
+                   <YAxis hide domain={[0, 100]} />
+                   <Tooltip 
+                     contentStyle={{ backgroundColor: 'rgba(5, 8, 16, 0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '24px', boxShadow: '0 40px 80px rgba(0,0,0,0.8)', backdropFilter: 'blur(40px)', padding: '24px' }}
+                     itemStyle={{ color: '#fff', fontSize: '12px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '2px' }}
+                   />
+                   <Area type="monotone" dataKey="risk" stroke="#f59e0b" strokeWidth={4} fillOpacity={1} fill="url(#colorRisk)" />
+                   <Area type="monotone" dataKey="confidence" stroke="#be123c" strokeWidth={2} strokeDasharray="5 5" fillOpacity={1} fill="url(#colorConf)" />
+                 </AreaChart>
+               </ResponsiveContainer>
+            </div>
+            
+            <div className="mt-12 flex justify-between items-center opacity-30 px-4" style={{ transform: 'translateZ(10px)' }}>
+                 <div className="text-[10px] font-mono font-bold text-slate-800 flex items-center gap-4 tracking-widest"><Sparkles className="w-4 h-4" /> NO_ANOMALIES_DETECTED</div>
+                 <div className="flex gap-2">
+                    {[1,2,3,4,5,6].map(i => <div key={i} className="w-1.5 h-6 bg-white/5 rounded-full" />)}
+                 </div>
+            </div>
           </div>
-        </div>
-        <div style={{ transform: 'translateZ(10px)' }}>
-          {children}
-        </div>
+        </TiltCard>
       </div>
-    </TiltCard>
-  </motion.div>
-);
 
-const CustomTooltip: React.FC<any> = ({ active, payload }) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="px-4 py-2.5 rounded-xl shadow-2xl backdrop-blur-xl text-[11px] font-bold ring-1 ring-white/10"
-           style={{ background: 'rgba(5, 8, 16, 0.95)', border: '1px solid rgba(139, 92, 246, 0.3)' }}>
-        <p className="text-slate-500 mb-1">{payload[0].payload.name || payload[0].payload.label}</p>
-        <p className="text-white text-base tracking-tighter">{`${payload[0].value}%`}</p>
+      {/* Side Stats */}
+      <div className="lg:col-span-4 grid grid-rows-2 gap-12">
+        <StatPanel title="ACTIVE_MONITORING" val="1.8K" icon={Users} color="text-sunset-amber" bg="bg-sunset-amber/10" border="border-sunset-amber/30" />
+        <StatPanel title="DATA_INGEST_RATE" val="99.9%" icon={Database} color="text-sunset-rose" bg="bg-sunset-rose/10" border="border-sunset-rose/30" />
       </div>
-    );
-  }
-  return null;
+
+      {/* Lower Dashboard */}
+      <div className="lg:col-span-12 grid grid-cols-1 lg:grid-cols-3 gap-12">
+         <TiltCard glowColor="30, 27, 75">
+            <div className="panel-glass rounded-[4rem] p-16 h-[500px] border-white/[0.04] relative overflow-hidden shadow-3xl">
+                <div className="absolute top-0 right-0 w-44 h-44 bg-academy-navy/10 blur-[60px] rounded-full translate-x-1/2 -translate-y-1/2" />
+                <div className="flex items-center gap-6 mb-12">
+                    <div className="p-4 bg-academy-navy/10 rounded-2xl ring-1 ring-academy-navy/40 shadow-2xl">
+                        <Activity className="w-6 h-6 text-slate-400" />
+                    </div>
+                    <div className="text-2xl font-black text-white tracking-tight uppercase italic">LIVE_FEED</div>
+                </div>
+                <div className="flex-1 w-full h-[300px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                         <BarChart data={chartData}>
+                             <Bar dataKey="risk">
+                                 {chartData.map((_, index: number) => (
+                                     <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#f59e0b' : '#be123c'} radius={10} />
+                                 ))}
+                             </Bar>
+                             <XAxis hide />
+                             <Tooltip cursor={{fill: 'rgba(255,255,255,0.03)'}} contentStyle={{ display: 'none' }} />
+                         </BarChart>
+                    </ResponsiveContainer>
+                </div>
+            </div>
+         </TiltCard>
+
+         <div className="lg:col-span-2">
+             <TiltCard glowColor="245, 158, 11">
+                <div className="panel-glass rounded-[4rem] p-16 h-[500px] border-white/[0.04] relative overflow-hidden shadow-3xl">
+                    <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-sunset-amber/5 blur-[120px] rounded-full translate-x-1/2 -translate-y-1/2" />
+                    <div className="flex items-center gap-6 mb-12">
+                        <div className="p-4 bg-sunset-amber/10 rounded-2xl ring-1 ring-sunset-amber/40 shadow-2xl">
+                            <Sparkles className="w-6 h-6 text-sunset-amber" />
+                        </div>
+                        <div className="text-2xl font-black text-white tracking-tight uppercase italic">INSTITUTIONAL_ALIGMENT_INDEX</div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-12">
+                         <div className="space-y-4">
+                            <div className="text-6xl font-black text-white tracking-tighter">94.2%</div>
+                            <div className="text-[10px] font-mono font-black text-slate-700 tracking-[0.4em] uppercase">SYSTEM_SUCCESS_PROJECTION</div>
+                            <div className="h-1.5 w-full bg-white/5 rounded-full relative overflow-hidden mt-8">
+                                <motion.div initial={{ width: 0 }} animate={{ width: '94.2%' }} transition={{ duration: 2 }} className="h-full bg-sunset-amber rounded-full" />
+                            </div>
+                         </div>
+                         <div className="space-y-4">
+                            <div className="text-6xl font-black text-white tracking-tighter">12.4%</div>
+                            <div className="text-[10px] font-mono font-black text-slate-700 tracking-[0.4em] uppercase">PROJECTED_DROPOUT_GAIN</div>
+                            <div className="h-1.5 w-full bg-white/5 rounded-full relative overflow-hidden mt-8">
+                                <motion.div initial={{ width: 0 }} animate={{ width: '12.4%' }} transition={{ duration: 2 }} className="h-full bg-sunset-rose rounded-full" />
+                            </div>
+                         </div>
+                    </div>
+                    <div className="mt-16 p-10 rounded-[3rem] bg-white/[0.02] border border-white/5 backdrop-blur-3xl">
+                        <div className="flex items-center gap-6">
+                             <div className="w-12 h-12 rounded-xl bg-sunset-amber/10 flex items-center justify-center text-sunset-amber ring-1 ring-sunset-amber/30"><AlertCircle className="w-6 h-6" /></div>
+                             <p className="text-[13px] font-bold text-slate-500 uppercase tracking-widest leading-relaxed italic">Neural pathways indicate a <span className="text-sunset-amber">4.2% increase</span> in student retention probability across the autumn semester cohort.</p>
+                        </div>
+                    </div>
+                </div>
+             </TiltCard>
+         </div>
+      </div>
+    </div>
+  );
 };
 
 export default MainDashboard;

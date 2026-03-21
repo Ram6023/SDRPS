@@ -1,85 +1,67 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { AlertTriangle, TrendingDown, Wallet, CheckCircle2, Sparkles, Brain } from 'lucide-react';
+import { AlertTriangle, TrendingDown, Wallet, Clock, ShieldCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import TiltCard from '@/components/ui/TiltCard';
 
 interface AIExplanationProps {
-  result: {
-    factors: {
-      attendance: number;
-      academic: number;
-      financial: number;
-    };
-    risk_level: string;
-  } | null;
+  result: any;
 }
 
 const AIExplanation: React.FC<AIExplanationProps> = ({ result }) => {
-  if (!result) return null;
-
-  const { factors } = result;
-
-  const getInsights = () => {
-    const list = [];
-    if (factors.attendance > 0.4) list.push({ icon: TrendingDown, label: 'Attendance Deficit', color: 'rose', desc: 'Critical absence patterns detected — attendance is a primary dropout indicator.' });
-    if (factors.academic > 0.45) list.push({ icon: AlertTriangle, label: 'Academic Concern', color: 'amber', desc: 'GPA fluctuations between semesters suggest academic struggle or disengagement.' });
-    if (factors.financial > 0.5) list.push({ icon: Wallet, label: 'Financial Risk', color: 'rose', desc: 'Unpaid fees are historically correlated with higher dropout probability.' });
-    
-    if (list.length === 0) list.push({ icon: CheckCircle2, label: 'On Track', color: 'emerald', desc: 'All indicators suggest this student is on track for successful completion.' });
-    
-    return list;
-  };
-
-  const insights = getInsights();
+  const factors = [
+    { label: 'ATTENDANCE_DEFICIT', val: `${(100 - parseFloat(result.attendance)).toFixed(1)}%`, icon: Clock, color: 'text-sunset-rose', bg: 'bg-sunset-rose/10', border: 'border-sunset-rose/30', desc: 'Critical engagement gap detected.' },
+    { label: 'ACADEMIC_CONCERN', val: `${result.gpa} GPA`, icon: TrendingDown, color: 'text-sunset-amber', bg: 'bg-sunset-amber/10', border: 'border-sunset-amber/30', desc: 'Subject performance below threshold.' },
+    { label: 'FINANCIAL_RISK', val: result.tuition_fees_up_to_date === '1' ? 'CLEAR' : 'PROTOCOL_VOID', icon: Wallet, color: result.tuition_fees_up_to_date === '1' ? 'text-matrix-green' : 'text-sunset-rose', bg: result.tuition_fees_up_to_date === '1' ? 'bg-matrix-green/10' : 'bg-sunset-rose/10', border: result.tuition_fees_up_to_date === '1' ? 'border-matrix-green/30' : 'border-sunset-rose/30', desc: 'Institutional protocol alignment status.' }
+  ];
 
   return (
-    <TiltCard glowColor="139, 92, 246" className="w-full">
-      <div className="panel-glass rounded-[2.5rem] p-10 flex flex-col h-full relative overflow-hidden group shadow-3xl" style={{ transformStyle: 'preserve-3d' }}>
-        <div className="absolute inset-0 bg-dots opacity-20 pointer-events-none" />
+    <TiltCard glowColor="245, 158, 11" className="h-full">
+      <div className="panel-glass rounded-[4rem] p-16 flex flex-col h-full relative overflow-hidden group border-white/[0.04] shadow-3xl" style={{ transformStyle: 'preserve-3d' }}>
+        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-sunset-rose/5 blur-[120px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none" />
         
-        <header className="flex justify-between items-center mb-10 relative z-10" style={{ transform: 'translateZ(25px)' }}>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-accent-500/10 flex items-center justify-center text-accent-400 ring-1 ring-accent-400/20"><Brain className="w-5 h-5 shadow-2xl" /></div>
-            <h4 className="text-[11px] font-black text-white/50 tracking-[0.25em] uppercase">AI Strategic Insights</h4>
-          </div>
-          <motion.div animate={{ opacity: [1, 0.5, 1] }} transition={{ duration: 3, repeat: Infinity }} className="flex items-center gap-2 px-3 py-1 rounded-lg bg-accent-500/10 ring-1 ring-accent-400/20 text-accent-400">
-             <Sparkles className="w-3.5 h-3.5" />
-             <span className="text-[9px] font-black tracking-widest uppercase">Live Scan</span>
-          </motion.div>
-        </header>
+        <div className="flex items-center gap-6 mb-20" style={{ transform: 'translateZ(30px)' }}>
+             <div className="p-4 bg-sunset-amber/10 rounded-2xl ring-1 ring-sunset-amber/40 shadow-3xl">
+                <AlertTriangle className="w-8 h-8 text-sunset-amber" />
+             </div>
+             <div>
+                <h3 className="text-4xl font-black text-white tracking-tight leading-none uppercase italic border-l-4 border-sunset-amber pl-6">DROPOUT_DIAGNOSTICS</h3>
+                <span className="text-[10px] font-mono font-black text-slate-700 tracking-[0.4em] uppercase ml-6">INSTITUTIONAL_RISK_SCAN_V5.0</span>
+             </div>
+        </div>
 
-        <div className="space-y-5 flex-grow relative z-10" style={{ transform: 'translateZ(35px)' }}>
-          {insights.map((item, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, x: -20, filter: 'blur(8px)' }}
-              animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-              transition={{ delay: 0.3 + idx * 0.15, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="flex gap-5 p-5 rounded-3xl group hover:bg-white/[0.04] transition-all relative border border-white/[0.06] backdrop-blur-sm"
-              style={{ transformStyle: 'preserve-3d' }}
+        <div className="space-y-12 flex-1" style={{ transform: 'translateZ(50px)' }}>
+          {factors.map((f, i) => (
+            <motion.div 
+              key={i} 
+              initial={{ opacity: 0, x: -30 }} 
+              animate={{ opacity: 1, x: 0 }} 
+              transition={{ delay: 1.2 + i * 0.2, duration: 1 }}
+              className={cn("p-10 rounded-[2.5rem] border backdrop-blur-3xl group/item relative overflow-hidden transition-all duration-700 hover:bg-white/[0.02] shadow-2xl", f.bg, f.border)}
             >
-              <div className={cn("p-4 rounded-2xl flex-shrink-0 transition-transform group-hover:scale-110 group-hover:rotate-12 shadow-2xl", 
-                  item.color === 'rose' ? 'bg-rose-500/15 text-rose-400 ring-1 ring-rose-500/30' : 
-                  item.color === 'amber' ? 'bg-amber-500/15 text-amber-400 ring-1 ring-amber-500/30' : 
-                  'bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/30'
-              )}>
-                  <item.icon className="w-6 h-6" />
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/[0.02] blur-[40px] rounded-full translate-x-1/2 -translate-y-1/2" />
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-6">
+                   <div className={cn("p-4 rounded-xl shadow-2xl", f.bg)}>
+                      <f.icon className={cn("w-7 h-7", f.color)} />
+                   </div>
+                   <div className="text-[11px] font-mono font-black tracking-[0.3em] uppercase text-slate-700">{f.label}</div>
+                </div>
+                <div className={cn("text-4xl font-black font-mono tracking-tighter drop-shadow-2xl", f.color)}>{f.val}</div>
               </div>
-              <div style={{ transform: 'translateZ(10px)' }}>
-                  <div className="text-[14px] font-black text-white mb-1.5 tracking-tight group-hover:text-accent-300 transition-colors uppercase">{item.label}</div>
-                  <p className="text-[12px] text-slate-500 leading-relaxed font-bold opacity-80 group-hover:opacity-100 transition-opacity">{item.desc}</p>
-              </div>
+              <p className="text-[13px] text-slate-500 font-bold uppercase tracking-widest leading-relaxed group-hover/item:text-slate-300 transition-colors">{" >> "} {f.desc}</p>
             </motion.div>
           ))}
         </div>
 
-        <div className="mt-10 pt-8 border-t border-white/[0.08] relative z-10" style={{ transform: 'translateZ(20px)' }}>
-          <div className="p-4 rounded-[1.25rem] text-[10px] font-black flex items-center justify-center gap-3 tracking-[0.3em] uppercase transition-all duration-700 hover:ring-2 hover:ring-accent-500/50"
-               style={{ background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.2)', color: 'rgb(167,139,250)', filter: 'drop-shadow(0 0 20px rgba(139,92,246,0.15))' }}>
-              <motion.span className="w-2.5 h-2.5 rounded-full bg-accent-400 shadow-[0_0_10px_#8b5cf6]" animate={{ opacity: [1, 0.4, 1], scale: [1, 1.3, 1] }} transition={{ duration: 2, repeat: Infinity }} />
-              Analysis Subsystem: Nominal
-          </div>
+        <div className="mt-16 flex items-center justify-between opacity-40 hover:opacity-100 transition-opacity duration-1000" style={{ transform: 'translateZ(40px)' }}>
+            <div className="flex items-center gap-4">
+                 <div className="w-10 h-10 rounded-xl bg-matrix-green/10 flex items-center justify-center text-matrix-green border border-matrix-green/30"><ShieldCheck className="w-6 h-6" /></div>
+                 <span className="text-[10px] font-mono font-black text-slate-800 tracking-[0.4em] uppercase">VALIDATED_BY_CORE_V5</span>
+            </div>
+            <div className="flex gap-2">
+                 {[1,2,3,4].map(i => <div key={i} className="w-1.5 h-6 bg-white/5 rounded-full" />)}
+            </div>
         </div>
       </div>
     </TiltCard>

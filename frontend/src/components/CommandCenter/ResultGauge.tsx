@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 import TiltCard from '@/components/ui/TiltCard';
 
 interface ResultGaugeProps {
@@ -11,64 +12,68 @@ const ResultGauge: React.FC<ResultGaugeProps> = ({ probability, riskLevel }) => 
   const percent = Math.round(probability * 100);
   
   const getColor = () => {
-    if (riskLevel === 'Critical') return '#f43f5e';
-    if (riskLevel === 'High') return '#f59e0b';
-    if (riskLevel === 'Moderate') return '#8b5cf6';
-    return '#10b981';
-  };
-
-  const hexToRgb = (hex: string) => {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '139, 92, 246';
+    if (riskLevel === 'Critical') return '#be123c'; // sunset-rose
+    if (riskLevel === 'High') return '#ea580c';    // orange-600
+    if (riskLevel === 'Medium') return '#f59e0b';  // sunset-amber
+    return '#10b981'; // emerald
   };
 
   const color = getColor();
-  const rgbColor = hexToRgb(color);
 
   return (
-    <TiltCard glowColor={rgbColor} className="w-full">
-      <div className="panel-glass rounded-[2.5rem] p-10 flex flex-col items-center justify-center text-center relative overflow-hidden group h-full shadow-3xl" style={{ transformStyle: 'preserve-3d' }}>
-        <div className="absolute inset-0 bg-grid-white opacity-10 pointer-events-none" />
+    <TiltCard glowColor={color === '#be123c' ? '190, 18, 60' : color === '#f59e0b' ? '245, 158, 11' : '16, 185, 129'} className="w-full h-full">
+      <div className="panel-glass rounded-[3rem] p-12 flex flex-col items-center justify-center h-full relative overflow-hidden group border-white/[0.04] shadow-3xl" style={{ transformStyle: 'preserve-3d' }}>
+        <div className="absolute top-10 left-10 text-[9px] font-mono font-black text-slate-800 uppercase tracking-[0.4em] px-4 py-2 border border-white/[0.03] rounded-xl backdrop-blur-3xl">RISK_ANALYSIS_NODE</div>
         
-        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40 mb-10 relative z-10" style={{ transform: 'translateZ(25px)' }}>Neural Risk Analysis</h4>
-
-        <div className="relative w-64 h-64 mb-6" style={{ transform: 'translateZ(50px)' }}>
-          <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="6" />
-            <motion.circle 
-              initial={{ strokeDashoffset: 276 }}
-              animate={{ strokeDashoffset: 276 - (276 * probability) }}
+        <div className="relative w-72 h-72 mb-10" style={{ transform: 'translateZ(50px)' }}>
+          <svg className="w-full h-full -rotate-90 transform group-hover:scale-105 transition-transform duration-1000">
+            <circle cx="144" cy="144" r="120" stroke="rgba(255,255,255,0.03)" strokeWidth="12" fill="none" />
+            <motion.circle
+              cx="144" cy="144" r="120"
+              stroke={color} strokeWidth="12" fill="none"
+              strokeDasharray={2 * Math.PI * 120}
+              initial={{ strokeDashoffset: 2 * Math.PI * 120 }}
+              animate={{ strokeDashoffset: 2 * Math.PI * 120 * (1 - probability) }}
               transition={{ duration: 2.5, ease: [0.16, 1, 0.3, 1] }}
-              cx="50" cy="50" r="44" fill="none" stroke={color} strokeWidth="6" strokeDasharray="276.46" strokeLinecap="round"
-              style={{ filter: `drop-shadow(0 0 15px ${color}80)` }}
+              strokeLinecap="round"
+              style={{ filter: `drop-shadow(0 0 30px ${color})` }}
             />
           </svg>
-
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <motion.div initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} className="text-7xl font-black text-white tracking-tighter">
-                  {percent}<span className="text-xl opacity-20">%</span>
-              </motion.div>
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mt-2 opacity-80">PROBABILITY_INDEX</span>
+          <div className="absolute inset-0 flex flex-col items-center justify-center" style={{ transform: 'translateZ(30px)' }}>
+            <span className="text-7xl font-black text-white tracking-tighter leading-none mb-2 drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">{percent}%</span>
+            <span className="text-[10px] font-mono font-black text-slate-700 tracking-[0.4em] uppercase">PROBABILITY</span>
           </div>
         </div>
 
-        <div className="mt-8 space-y-3 relative z-10" style={{ transform: 'translateZ(40px)' }}>
-          <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-3xl font-black uppercase tracking-[0.2em]" style={{ color, filter: `drop-shadow(0 0 15px ${color}50)` }}>
-              {riskLevel}
+        <div className="text-center mt-4" style={{ transform: 'translateZ(40px)' }}>
+          <div className="text-[12px] font-mono font-black text-slate-700 uppercase tracking-[0.3em] mb-4 flex items-center justify-center gap-3">
+             <div className="w-1.5 h-1.5 rounded-full bg-slate-800 animate-pulse" /> CLASSIFICATION_LEVEL
+          </div>
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1, duration: 1 }}
+            className={cn("text-4xl font-black px-10 py-5 rounded-[2rem] border transition-all duration-1000 shadow-3xl uppercase tracking-tighter",
+                riskLevel === 'Critical' ? 'bg-sunset-rose/10 border-sunset-rose text-sunset-rose' :
+                riskLevel === 'High' ? 'bg-orange-600/10 border-orange-600 text-orange-600' :
+                riskLevel === 'Medium' ? 'bg-sunset-amber/10 border-sunset-amber text-sunset-amber' :
+                'bg-matrix-green/10 border-matrix-green text-matrix-green'
+            )}
+            style={{ 
+                boxShadow: riskLevel === 'Critical' ? '0 0 50px rgba(190,18,60,0.2)' : 
+                           riskLevel === 'Medium' ? '0 0 50px rgba(245,158,11,0.2)' : 'none'
+            }}
+          >
+            {riskLevel}
           </motion.div>
-          <div className="text-[10px] font-bold text-slate-600 tracking-widest uppercase">System Classification Status</div>
         </div>
-
-        <div className="mt-10 flex gap-3 p-3 rounded-2xl bg-white/[0.03] border border-white/[0.06] relative z-10 shadow-inner" style={{ transform: 'translateZ(20px)' }}>
-          {['Low', 'Moderate', 'High', 'Critical'].map(level => (
-              <motion.div 
-                  key={level}
-                  animate={riskLevel === level ? { scale: [1, 1.25, 1], opacity: [0.6, 1, 0.6] } : {}}
-                  transition={{ duration: 2.5, repeat: Infinity }}
-                  className={`h-2 rounded-full transition-all duration-1000 ${riskLevel === level ? 'w-12 shadow-2xl' : 'w-5 bg-white/5 opacity-40'}`}
-                  style={{ backgroundColor: riskLevel === level ? color : undefined, boxShadow: riskLevel === level ? `0 0 15px ${color}` : 'none' }}
-              />
-          ))}
+        
+        {/* Artistic scan details */}
+        <div className="absolute bottom-10 left-10 right-10 flex justify-between items-center px-4 opacity-30 group-hover:opacity-100 transition-all duration-1000">
+             <div className="text-[8px] font-mono font-bold text-slate-800 tracking-[0.2em] uppercase">SYSTEM_STABLE</div>
+             <div className="flex gap-1">
+                 {[1,2,3,4,5].map(i => <div key={i} className="w-1 h-3 bg-white/5 rounded-full" />)}
+             </div>
         </div>
       </div>
     </TiltCard>

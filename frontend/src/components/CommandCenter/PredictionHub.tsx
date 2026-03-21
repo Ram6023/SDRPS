@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Activity, GraduationCap, CreditCard, ChevronRight, Check, Sparkles } from 'lucide-react';
+import { User, Activity, GraduationCap, CreditCard, ChevronRight, Sparkles, Cpu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import TiltCard from '@/components/ui/TiltCard';
 
@@ -9,213 +9,155 @@ interface PredictionHubProps {
   loading: boolean;
 }
 
+const Header = ({ title, icon: Icon }: any) => (
+    <div className="space-y-3" style={{ transform: 'translateZ(15px)' }}>
+        <div className="flex items-center gap-5 text-sunset-amber mb-2">
+          <div className="p-3 bg-sunset-amber/10 rounded-xl ring-1 ring-sunset-amber/30"><Icon className="w-6 h-6" /></div>
+          <div className="text-[10px] font-mono font-black uppercase tracking-[0.3em] bg-sunset-amber/20 px-3 py-1 rounded-lg flex items-center gap-2 border border-sunset-amber/30">
+            <Sparkles className="w-3 h-3" /> PHASE_DATA_INPUT
+          </div>
+        </div>
+        <h3 className="text-3xl font-black text-white tracking-tight leading-none uppercase">{title}</h3>
+        <p className="text-sm text-slate-700 font-bold uppercase tracking-wider opacity-60 leading-relaxed">SYSTEM_DATA_INGESTION: [STUDENT_DROPOUT_RISK_PROTOCOL]</p>
+    </div>
+);
+
+const InputGroup = ({ label, icon: Icon, ...props }: any) => (
+    <div className="space-y-4" style={{ transform: 'translateZ(20px)' }}>
+        <div className="flex items-center gap-3">
+             <label className="text-[9px] font-mono font-black uppercase tracking-[0.4em] text-slate-700 block px-4 border-l border-white/5">{label}</label>
+             <div className="flex-1 h-[1px] bg-white/[0.03]" />
+        </div>
+        <div className="relative group/input">
+          <input {...props} required
+              className="w-full text-white px-10 py-7 rounded-[1.5rem] outline-none transition-all font-black placeholder:text-slate-900 text-3xl font-mono shadow-2xl"
+              style={{ 
+                  background: 'rgba(2,2,6,0.9)', 
+                  border: '1px solid rgba(255,255,255,0.04)',
+                  boxShadow: 'inset 0 10px 40px rgba(0,0,0,0.5)'
+              }}
+              onFocus={(e: any) => { 
+                e.target.style.borderColor = 'rgba(245,158,11,0.4)'; 
+                e.target.style.boxShadow = '0 0 50px rgba(245,158,11,0.1), inset 0 10px 40px rgba(0,0,0,0.5)'; 
+              }}
+              onBlur={(e: any) => { 
+                e.target.style.borderColor = 'rgba(255,255,255,0.04)'; 
+                e.target.style.boxShadow = 'inset 0 10px 40px rgba(0,0,0,0.5)'; 
+              }}
+          />
+          <div className="absolute right-10 top-1/2 -translate-y-1/2 opacity-0 group-hover/input:opacity-100 transition-opacity pointer-events-none flex gap-2">
+            <Icon className="w-6 h-6 text-sunset-amber/10" />
+            <Cpu className="w-6 h-6 text-sunset-rose/10" />
+          </div>
+        </div>
+    </div>
+);
+
 const PredictionHub: React.FC<PredictionHubProps> = ({ onSubmit, loading }) => {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({
-    name: '',
-    attendance: '',
-    sem1_cgpa: '',
-    sem2_cgpa: '',
-    fee_paid: 1
+  const [data, setData] = useState({
+      name: '',
+      attendance: '85',
+      sem1_cgpa: '7.5',
+      sem2_cgpa: '7.8',
+      fee_paid: '1'
   });
 
   const steps = [
-    { id: 1, label: 'Profile', icon: User },
-    { id: 2, label: 'Attendance', icon: Activity },
-    { id: 3, label: 'Academics', icon: GraduationCap },
-    { id: 4, label: 'Finance', icon: CreditCard },
+      { id: 1, title: 'IDENTITY_PROFILE', icon: User, fields: [{ name: 'name', label: 'SUBJECT_FULL_NAME', placeholder: 'ANONYMOUS_VOID', type: 'text' }] },
+      { id: 2, title: 'ENGAGEMENT_METRICS', icon: Activity, fields: [{ name: 'attendance', label: 'ATTENDANCE_VECTOR (0-100)', placeholder: '85', type: 'number' }] },
+      { id: 3, title: 'ACADEMIC_HISTORY', icon: GraduationCap, fields: [
+          { name: 'sem1_cgpa', label: 'SEMESTER_1_CGPA (0-10)', placeholder: '7.5', type: 'number' },
+          { name: 'sem2_cgpa', label: 'SEMESTER_2_CGPA (0-10)', placeholder: '7.8', type: 'number' }
+      ] },
+      { id: 4, title: 'FINANCIAL_PROTOCOL', icon: CreditCard, fields: [{ name: 'fee_paid', label: 'TUITION_STATUS (1=PAID, 0=UNPAID)', placeholder: '1', type: 'number' }] }
   ];
 
-  const handleNext = () => step < 4 && setStep(s => s + 1);
-  const handleBack = () => step > 1 && setStep(s => s - 1);
+  const currentStep = steps.find(s => s.id === step);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (step < 4) { handleNext(); return; }
-    onSubmit({
-      ...formData,
-      attendance: parseFloat(formData.attendance),
-      sem1_cgpa: parseFloat(formData.sem1_cgpa),
-      sem2_cgpa: parseFloat(formData.sem2_cgpa),
-      fee_paid: parseInt(formData.fee_paid.toString())
-    });
+  const next = () => {
+    if (step < 4) {
+      setStep(step + 1);
+    } else {
+      // Map to backend expected format
+      const backendData = {
+        attendance: parseFloat(data.attendance),
+        sem1_cgpa: parseFloat(data.sem1_cgpa),
+        sem2_cgpa: parseFloat(data.sem2_cgpa),
+        fee_paid: parseInt(data.fee_paid)
+      };
+      // Keep name for frontend UI
+      onSubmit({ ...backendData, name: data.name });
+    }
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto py-4">
-      {/* Progress Track with 3D feel */}
-      <div className="flex justify-between mb-16 relative px-4" style={{ transform: 'translateZ(10px)' }}>
-        <div className="absolute top-1/2 left-0 w-full h-[1px] -translate-y-1/2 z-0" style={{ background: 'rgba(255,255,255,0.06)' }} />
-        <motion.div 
-            className="absolute top-1/2 left-0 h-[1.5px] -translate-y-1/2 z-0 origin-left"
-            style={{ width: '100%', background: 'linear-gradient(90deg, #8b5cf6, #a78bfa)', boxShadow: '0 0 10px rgba(139,92,246,0.4)' }}
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: (step - 1) / 3 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        />
-        {steps.map((s) => (
-          <div key={s.id} className="relative z-10" style={{ transformStyle: 'preserve-3d' }}>
-            <motion.button
-                type="button"
-                onClick={() => setStep(s.id)}
-                whileHover={{ scale: 1.15, rotate: 5, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className={cn(
-                    "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-700",
-                    step >= s.id 
-                    ? 'text-white' 
-                    : 'text-slate-600 border border-white/[0.04]'
-                )}
-                style={step >= s.id ? { 
-                    background: 'linear-gradient(135deg, #8b5cf6, #7c3aed)',
-                    boxShadow: '0 0 25px rgba(139,92,246,0.3)',
-                    transform: 'translateZ(10px)'
-                } : { background: 'rgba(12,12,22,0.8)' }}
-            >
-              {step > s.id ? <Check className="w-6 h-6 stroke-[3px]" /> : <s.icon className="w-5 h-5" />}
-            </motion.button>
-            <div className={cn(
-                "absolute top-full left-1/2 -translate-x-1/2 mt-4 text-[10px] font-black uppercase tracking-[0.15em] whitespace-nowrap transition-all duration-500",
-                step >= s.id ? 'text-white translate-y-0 opacity-100' : 'text-slate-600 translate-y-1 opacity-50'
-            )}>
-                {s.label}
+    <TiltCard glowColor="245, 158, 11" className="w-full">
+      <div className="panel-glass rounded-[4rem] p-16 min-h-[700px] flex flex-col relative overflow-hidden group border-white/[0.04] shadow-3xl" style={{ transformStyle: 'preserve-3d' }}>
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-sunset-amber/5 blur-[150px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+        
+        <div className="flex justify-between items-start mb-24" style={{ transform: 'translateZ(30px)' }}>
+            <Header title={currentStep?.title} icon={currentStep?.icon} />
+            <div className="flex gap-4">
+                {steps.map(s => (
+                    <motion.div key={s.id} 
+                        initial={false}
+                        animate={{ 
+                            width: step === s.id ? 60 : 12,
+                            backgroundColor: step >= s.id ? '#f59e0b' : 'rgba(255,255,255,0.05)',
+                            opacity: step >= s.id ? 1 : 0.3
+                        }}
+                        className="h-3 rounded-full shadow-2xl border border-white/5"
+                    />
+                ))}
             </div>
-          </div>
-        ))}
-      </div>
+        </div>
 
-      {/* Form with 3D Tilt */}
-      <TiltCard glowColor="139, 92, 246" className="w-full">
-        <form onSubmit={handleSubmit} className="panel-glass rounded-[2rem] p-10 sm:p-14 relative overflow-hidden" style={{ transformStyle: 'preserve-3d' }}>
-          <div className="absolute top-0 left-0 w-full h-[1px]" style={{ background: 'linear-gradient(90deg, transparent, rgba(139,92,246,0.4), transparent)' }} />
-          <div className="absolute -top-10 -right-10 w-40 h-40 bg-accent-500/5 blur-3xl rounded-full" />
-          
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={step}
-              initial={{ opacity: 0, x: 30, filter: 'blur(10px)' }}
-              animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, x: -30, filter: 'blur(10px)' }}
-              transition={{ duration: 0.5, ease: 'easeOut' }}
-              className="space-y-10"
-              style={{ transform: 'translateZ(20px)' }}
+        <div className="flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full mb-20" style={{ transform: 'translateZ(40px)' }}>
+            <AnimatePresence mode="wait">
+                <motion.div key={step} initial={{ opacity: 0, x: 50, filter: 'blur(10px)' }} animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }} exit={{ opacity: 0, x: -50, filter: 'blur(10px)' }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
+                    {currentStep?.fields.map(f => (
+                        <div key={f.name} className="mb-8">
+                             <InputGroup 
+                                label={f.label}
+                                type={f.type}
+                                value={(data as any)[f.name]}
+                                placeholder={f.placeholder}
+                                icon={currentStep?.icon}
+                                onChange={(e: any) => setData({ ...data, [f.name]: e.target.value })}
+                            />
+                        </div>
+                    ))}
+                </motion.div>
+            </AnimatePresence>
+        </div>
+
+        <div className="mt-auto flex justify-between items-center" style={{ transform: 'translateZ(50px)' }}>
+            <div className="flex flex-col gap-1">
+                 <span className="text-[10px] font-mono font-black text-slate-800 tracking-[0.3em] uppercase">SYSTEM_STABLE</span>
+                 <div className="flex gap-1.5 opacity-30">
+                     {[1,2,3,4,5,6,7,8].map(i => <div key={i} className={cn("w-1.5 h-1.5 rounded-full", i <= step * 2 ? 'bg-sunset-amber' : 'bg-white/10')} />)}
+                 </div>
+            </div>
+            <motion.button 
+                whileHover={{ scale: 1.05, y: -5 }} 
+                whileTap={{ scale: 0.95 }}
+                onClick={next}
+                disabled={loading}
+                className={cn("px-16 py-8 rounded-[2.5rem] flex items-center gap-6 font-black uppercase tracking-[0.4em] text-white shadow-3xl transition-all relative overflow-hidden group",
+                    loading ? "opacity-50 cursor-not-allowed" : "shimmer-accent"
+                )}
+                style={{ background: 'linear-gradient(135deg, #f59e0b, #be123c)' }}
             >
-              {step === 1 && (
-                <div className="space-y-8" style={{ transformStyle: 'preserve-3d' }}>
-                  <Header title="Student Identity" desc="Primary identification of the subject student." icon={User} />
-                  <InputGroup label="Subject Full Name" type="text" name="name" autoFocus placeholder="Enter name..."
-                      value={formData.name} onChange={(e: any) => setFormData({...formData, name: e.target.value})} />
+                <div className="relative z-10 flex items-center gap-4">
+                    {loading ? 'PROCESSING_NEURAL_LINK...' : step === 4 ? 'INITIALIZE_PREDICTION_SCAN' : 'NEXT_DATA_PHASE'}
+                    <div className="p-2 bg-white/10 rounded-xl"><ChevronRight className="w-5 h-5" /></div>
                 </div>
-              )}
-
-              {step === 2 && (
-                <div className="space-y-8">
-                  <Header title="Engagement Metrics" desc="Percentage of academic sessions attended." icon={Activity} />
-                  <InputGroup label="Cumulative Attendance (%)" type="number" max={100} min={0} name="attendance" autoFocus placeholder="0 - 100"
-                      value={formData.attendance} onChange={(e: any) => setFormData({...formData, attendance: e.target.value})} />
-                </div>
-              )}
-
-              {step === 3 && (
-                <div className="space-y-8">
-                  <Header title="Academic History" desc="Performance metrics for previous semesters." icon={GraduationCap} />
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6" style={{ transform: 'translateZ(10px)' }}>
-                      <InputGroup label="Sem 1 GPA" type="number" max={10} min={0} step="0.01" name="sem1_cgpa" placeholder="0.00"
-                          value={formData.sem1_cgpa} onChange={(e: any) => setFormData({...formData, sem1_cgpa: e.target.value})} />
-                      <InputGroup label="Sem 2 GPA" type="number" max={10} min={0} step="0.01" name="sem2_cgpa" placeholder="0.00"
-                          value={formData.sem2_cgpa} onChange={(e: any) => setFormData({...formData, sem2_cgpa: e.target.value})} />
-                  </div>
-                </div>
-              )}
-
-              {step === 4 && (
-                <div className="space-y-8">
-                  <Header title="Financial Integrity" desc="Verified status of institutional fee payment." icon={CreditCard} />
-                  <div className="grid grid-cols-2 gap-5" style={{ transform: 'translateZ(10px)' }}>
-                    <SelectBox active={formData.fee_paid === 1} onClick={() => setFormData({...formData, fee_paid: 1})} label="Cleared" desc="Fees Fully Paid" />
-                    <SelectBox active={formData.fee_paid === 0} onClick={() => setFormData({...formData, fee_paid: 0})} label="Pending" desc="Payment Dues" />
-                  </div>
-                </div>
-              )}
-            </motion.div>
-          </AnimatePresence>
-
-          <footer className="flex justify-between items-center mt-16 pt-8" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', transform: 'translateZ(40px)' }}>
-              <button type="button" onClick={handleBack}
-                  className={cn("text-xs font-bold uppercase tracking-[0.2em] text-slate-500 hover:text-white transition-all disabled:opacity-0", step === 1 && "invisible")}>
-                  Back
-              </button>
-              
-              <motion.button type="submit" disabled={loading} whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.95 }}
-                  className="btn-premium px-10 py-4 shimmer-accent text-sm font-black uppercase tracking-[0.2em] gap-3">
-                  {step < 4 ? "Next Phase" : loading ? "Neural Scan..." : "Analyze Risk"}
-                  {step < 4 && <ChevronRight className="w-4.5 h-4.5 group-hover:translate-x-1 duration-300" />}
-              </motion.button>
-          </footer>
-        </form>
-      </TiltCard>
-    </div>
+            </motion.button>
+        </div>
+      </div>
+    </TiltCard>
   );
 };
-
-const Header = ({ title, desc, icon: Icon }: any) => (
-    <div className="space-y-2" style={{ transform: 'translateZ(10px)' }}>
-        <div className="flex items-center gap-3 text-accent-400 mb-1">
-          <Icon className="w-4.5 h-4.5" />
-          <div className="text-[10px] font-black uppercase tracking-widest bg-accent-500/15 px-2 py-0.5 rounded flex items-center gap-1.5">
-            <Sparkles className="w-2.5 h-2.5" /> Phase Data
-          </div>
-        </div>
-        <h3 className="text-2xl font-black text-white tracking-tight">{title}</h3>
-        <p className="text-sm text-slate-500 font-medium">{desc}</p>
-    </div>
-);
-
-const InputGroup = ({ label, ...props }: any) => (
-    <div className="space-y-3" style={{ transform: 'translateZ(15px)' }}>
-        <label className="text-[10px] font-bold uppercase tracking-widest text-slate-600 block ml-2">{label}</label>
-        <div className="relative group/input">
-          <input {...props} required
-              className="w-full text-white px-8 py-5 rounded-2xl outline-none transition-all font-black placeholder:text-slate-800 text-xl"
-              style={{ 
-                  background: 'rgba(12,12,22,0.85)', 
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.2)'
-              }}
-              onFocus={(e: any) => { 
-                e.target.style.borderColor = 'rgba(139,92,246,0.4)'; 
-                e.target.style.boxShadow = '0 0 0 5px rgba(139,92,246,0.06), inset 0 2px 4px rgba(0,0,0,0.2)'; 
-              }}
-              onBlur={(e: any) => { 
-                e.target.style.borderColor = 'rgba(255,255,255,0.08)'; 
-                e.target.style.boxShadow = 'inset 0 2px 4px rgba(0,0,0,0.2)'; 
-              }}
-          />
-          <div className="absolute right-6 top-1/2 -translate-y-1/2 opacity-0 group-hover/input:opacity-100 transition-opacity pointer-events-none">
-            <Sparkles className="w-5 h-5 text-accent-400/20" />
-          </div>
-        </div>
-    </div>
-);
-
-const SelectBox = ({ active, onClick, label, desc }: any) => (
-    <button type="button" onClick={onClick}
-        className={cn("p-8 rounded-2xl text-left transition-all group relative overflow-hidden flex flex-col justify-end min-h-[140px]",
-            active ? 'text-white' : 'hover:border-white/12'
-        )}
-        style={active 
-            ? { background: 'linear-gradient(135deg, rgba(139,92,246,0.15), rgba(124,58,237,0.15))', border: '1px solid rgba(139,92,246,0.4)', boxShadow: '0 0 30px rgba(139,92,246,0.12)' }
-            : { background: 'rgba(12,12,22,0.85)', border: '1px solid rgba(255,255,255,0.08)' }
-        }
-    >
-        <div className={cn("absolute top-6 right-6 w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-700",
-            active ? 'bg-accent-400 border-accent-400 text-white scale-100' : 'bg-transparent border-white/10 text-transparent scale-75'
-        )}>
-            <Check className="w-5 h-5 stroke-[3px]" />
-        </div>
-        <div className={cn("text-base font-black mb-1.5 relative z-10 tracking-tight", active ? 'text-white translate-y-0' : 'text-slate-500 translate-y-2')}>{label}</div>
-        <div className={cn("text-[10px] font-bold uppercase tracking-widest relative z-10 transition-all duration-500", active ? 'text-accent-400 opacity-100' : 'text-slate-700 opacity-60')}>{desc}</div>
-    </button>
-);
 
 export default PredictionHub;
