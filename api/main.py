@@ -10,6 +10,7 @@ app = FastAPI(
     title="Student Dropout Risk Prediction API",
     description="ML-powered prediction of student dropout probability.",
     version="1.5.0",
+    root_path="/api",
 )
 
 app.add_middleware(
