@@ -7,7 +7,7 @@ import ResultGauge from '../components/CommandCenter/ResultGauge';
 import AIExplanation from '../components/CommandCenter/AIExplanation';
 import BulkUpload from '../components/BulkUpload';
 import { predictDropoutRisk } from '../services/api';
-import { Bell, Search, LayoutDashboard, Database, BarChart3, Activity, Shield, Cpu, GraduationCap, Users } from 'lucide-react';
+import { Bell, Search, LayoutDashboard, Database, BarChart3, Activity, Shield, GraduationCap, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import React from 'react';
 import campusBg from '../assets/campus_bg.png';
@@ -262,7 +262,7 @@ const Home = () => {
                                         <Activity className="w-4 h-4 rotate-180" /> RETREAT_TO_NEURAL_HUB
                                      </button>
                                 </div>
-                                <div className="lg:col-span-5"><CinematicReveal><ResultGauge probability={currentResult.probability} riskLevel={currentResult.risk_level} /></CinematicReveal></div>
+                                <div className="lg:col-span-5"><CinematicReveal><ResultGauge result={currentResult} /></CinematicReveal></div>
                                 <div className="lg:col-span-7"><CinematicReveal><AIExplanation result={currentResult} /></CinematicReveal></div>
                                 <div className="lg:col-span-12"><CinematicReveal><MainDashboard history={history} /></CinematicReveal></div>
                            </div>
