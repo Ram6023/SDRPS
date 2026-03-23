@@ -1,7 +1,11 @@
+import os
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-from api.model import predict_dropout
+try:
+    from model import predict_dropout
+except ImportError:
+    from api.model import predict_dropout
 import pandas as pd
 import io
 import json
@@ -10,7 +14,7 @@ app = FastAPI(
     title="Student Dropout Risk Prediction API",
     description="ML-powered prediction of student dropout probability.",
     version="1.5.0",
-    root_path="/api",
+    root_path="/api" if os.environ.get("VERCEL") else ""
 )
 
 app.add_middleware(
@@ -32,6 +36,7 @@ async def predict(data: StudentData):
     try:
         return predict_dropout(data.attendance, data.sem1_cgpa, data.sem2_cgpa, data.fee_paid)
     except Exception as e:
+        print(f"Prediction Error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/predict-csv")

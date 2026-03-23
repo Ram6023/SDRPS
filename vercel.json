@@ -19,8 +19,16 @@
       "destination": "api/main.py"
     },
     {
-      "source": "/(.*)",
-      "destination": "frontend/$1"
+      "source": "/assets/(.*)",
+      "destination": "frontend/assets/$1"
+    },
+    {
+      "source": "/favicon.ico",
+      "destination": "frontend/favicon.png"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "frontend/index.html"
     }
   ]
 }

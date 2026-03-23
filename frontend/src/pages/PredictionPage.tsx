@@ -65,7 +65,7 @@ const PredictionPage: React.FC = () => {
                                 </motion.div>
                             ) : (
                                 <motion.div key="result" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="h-full">
-                                    <ResultGauge probability={result.probability} riskLevel={result.risk_level} />
+                                    <ResultGauge result={result} />
                                 </motion.div>
                             )}
                         </AnimatePresence>

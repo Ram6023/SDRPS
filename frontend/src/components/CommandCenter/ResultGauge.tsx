@@ -15,7 +15,7 @@ const ResultGauge: React.FC<ResultGaugeProps> = ({ result }) => {
   const getColor = () => {
     if (riskLevel === 'Critical') return '#be123c'; // sunset-rose
     if (riskLevel === 'High') return '#ea580c';    // orange-600
-    if (riskLevel === 'Medium') return '#f59e0b';  // sunset-amber
+    if (riskLevel === 'Medium' || riskLevel === 'Moderate') return '#f59e0b';  // sunset-amber
     return '#10b981'; // emerald
   };
 
@@ -57,7 +57,7 @@ const ResultGauge: React.FC<ResultGaugeProps> = ({ result }) => {
             className={cn("text-3xl font-black px-8 py-4 rounded-[2rem] border transition-all duration-1000 shadow-3xl uppercase tracking-tighter mb-8",
                 riskLevel === 'Critical' ? 'bg-sunset-rose/10 border-sunset-rose text-sunset-rose' :
                 riskLevel === 'High' ? 'bg-orange-600/10 border-orange-600 text-orange-600' :
-                riskLevel === 'Medium' ? 'bg-sunset-amber/10 border-sunset-amber text-sunset-amber' :
+                (riskLevel === 'Medium' || riskLevel === 'Moderate') ? 'bg-sunset-amber/10 border-sunset-amber text-sunset-amber' :
                 'bg-matrix-green/10 border-matrix-green text-matrix-green'
             )}
           >
