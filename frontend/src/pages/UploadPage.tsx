@@ -15,7 +15,7 @@ const UploadPage: React.FC = () => {
                      <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1 }} className="flex flex-col items-center">
                         <div className="p-4 bg-indigo-vibrant/10 rounded-2xl ring-1 ring-indigo-vibrant/40 mb-6 shadow-3xl"><Database className="w-10 h-10 text-indigo-vibrant" /></div>
                         <h2 className="text-5xl font-black text-white tracking-tighter uppercase italic leading-none mb-4">INSTITUTIONAL_DATA_INGESTION</h2>
-                        <span className="text-[10px] font-mono font-black text-slate-700 tracking-[0.4em] uppercase mb-10 leading-relaxed font-mono italic">CSV_BATCH_PROCESSING_SYNC_AUDIT_READY</span>
+                        <span className="text-[10px] font-mono font-black text-slate-700 tracking-[0.4em] uppercase mb-10 leading-relaxed font-mono italic">CSV_BATCH_PROCESSING_SYNC_V5_AUDIT_READY</span>
                      </motion.div>
                 </div>
 

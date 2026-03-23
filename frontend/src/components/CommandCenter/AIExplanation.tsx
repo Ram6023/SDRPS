@@ -26,7 +26,7 @@ const AIExplanation: React.FC<AIExplanationProps> = ({ result }) => {
              </div>
              <div>
                 <h3 className="text-4xl font-black text-white tracking-tight leading-none uppercase italic border-l-4 border-sunset-amber pl-6">DROPOUT_DIAGNOSTICS</h3>
-                <span className="text-[10px] font-mono font-black text-slate-700 tracking-[0.4em] uppercase ml-6">INSTITUTIONAL_RISK_SCAN</span>
+                <span className="text-[10px] font-mono font-black text-slate-700 tracking-[0.4em] uppercase ml-6">INSTITUTIONAL_RISK_SCAN_V5.0</span>
              </div>
         </div>
 
@@ -57,7 +57,7 @@ const AIExplanation: React.FC<AIExplanationProps> = ({ result }) => {
         <div className="mt-16 flex items-center justify-between opacity-40 hover:opacity-100 transition-opacity duration-1000" style={{ transform: 'translateZ(40px)' }}>
             <div className="flex items-center gap-4">
                  <div className="w-10 h-10 rounded-xl bg-matrix-green/10 flex items-center justify-center text-matrix-green border border-matrix-green/30"><ShieldCheck className="w-6 h-6" /></div>
-                 <span className="text-[10px] font-mono font-black text-slate-800 tracking-[0.4em] uppercase">VALIDATED_BY_CORE</span>
+                 <span className="text-[10px] font-mono font-black text-slate-800 tracking-[0.4em] uppercase">VALIDATED_BY_CORE_V5</span>
             </div>
             <div className="flex gap-2">
                  {[1,2,3,4].map(i => <div key={i} className="w-1.5 h-6 bg-white/5 rounded-full" />)}

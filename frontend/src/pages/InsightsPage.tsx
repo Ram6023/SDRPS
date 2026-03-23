@@ -32,7 +32,7 @@ const InsightsPage: React.FC = () => {
                      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center">
                         <div className="p-3 bg-emerald-500/10 rounded-xl ring-1 ring-emerald-500/30 mb-4"><Sparkles className="w-6 h-6 text-emerald-500" /></div>
                         <h2 className="text-2xl font-black text-white tracking-tight uppercase leading-none mb-2">NEURAL PROGNOSTIC INSIGHTS</h2>
-                        <span className="text-[9px] font-mono font-bold text-slate-600 tracking-widest uppercase">AI_EXPLANATIONS_CORE</span>
+                        <span className="text-[9px] font-mono font-bold text-slate-600 tracking-widest uppercase">AI_EXPLANATIONS_CORE_V5</span>
                      </motion.div>
                 </div>
 

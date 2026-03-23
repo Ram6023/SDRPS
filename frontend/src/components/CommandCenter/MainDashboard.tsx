@@ -50,7 +50,7 @@ const MainDashboard: React.FC<MainDashboardProps> = ({ history = [] }) => {
                     </div>
                     <div>
                         <h3 className="text-4xl font-black text-white tracking-tight leading-none uppercase italic border-l-4 border-sunset-amber pl-6">RISK_TRAJECTORY</h3>
-                        <span className="text-[10px] font-mono font-black text-slate-700 tracking-[0.4em] uppercase ml-6">NEURAL_TEMPORAL_FLOW</span>
+                        <span className="text-[10px] font-mono font-black text-slate-700 tracking-[0.4em] uppercase ml-6">NEURAL_TEMPORAL_FLOW_V5</span>
                     </div>
                  </div>
                  <div className="flex gap-4">

@@ -22,7 +22,7 @@ const AboutPage: React.FC = () => {
             <div className="max-w-[1400px] mx-auto relative z-10">
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-32">
                     <div className="inline-block px-8 py-3 rounded-full text-[10px] font-mono font-black text-sunset-amber tracking-[0.4em] uppercase border border-sunset-amber/30 bg-sunset-amber/5 mb-10">
-                        ABOUT_INSTITUTIONAL_MODULE
+                        ABOUT_INSTITUTIONAL_MODULE_V5
                     </div>
                     <h2 className="text-7xl font-black text-white tracking-tighter uppercase mb-10 leading-none">
                         STUDENT DROPOUT <br />
