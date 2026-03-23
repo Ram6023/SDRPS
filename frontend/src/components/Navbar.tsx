@@ -3,6 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { GraduationCap, LayoutDashboard, BrainCircuit, Upload, Info, Home as HomeIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+import logo from '../assets/logo.png';
+
 const Navbar: React.FC = () => {
     const [scrolled, setScrolled] = useState(false);
     const location = useLocation();
@@ -39,7 +41,7 @@ const Navbar: React.FC = () => {
             <div className="max-w-[1400px] mx-auto w-full flex items-center justify-between gap-6">
                 {/* Logo */}
                 <Link to="/" className="shrink-0 group/logo">
-                    <img src="/src/assets/logo.png" alt="Student Dropout Risk Prediction" className="h-14 w-auto group-hover/logo:scale-105 transition-transform" />
+                    <img src={logo} alt="Student Dropout Risk Prediction" className="h-14 w-auto group-hover/logo:scale-105 transition-transform" />
                 </Link>
 
                 {/* Navigation Links */}

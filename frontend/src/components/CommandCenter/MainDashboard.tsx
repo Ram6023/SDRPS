@@ -61,7 +61,7 @@ const MainDashboard: React.FC<MainDashboardProps> = ({ history = [] }) => {
             </div>
 
             <div className="flex-1 w-full min-h-[400px]" style={{ transform: 'translateZ(20px)' }}>
-               <ResponsiveContainer width="100%" height="100%">
+               <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                  <AreaChart data={chartData}>
                    <defs>
                      <linearGradient id="colorRisk" x1="0" y1="0" x2="0" y2="1">
@@ -114,7 +114,7 @@ const MainDashboard: React.FC<MainDashboardProps> = ({ history = [] }) => {
                     <div className="text-2xl font-black text-white tracking-tight uppercase italic">LIVE_FEED</div>
                 </div>
                 <div className="flex-1 w-full h-[300px]">
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                          <BarChart data={chartData}>
                              <Bar dataKey="risk">
                                  {chartData.map((_, index: number) => (

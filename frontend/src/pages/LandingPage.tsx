@@ -4,6 +4,8 @@ import { BrainCircuit, LayoutDashboard, Database, Info, ChevronRight } from 'luc
 import { Link } from 'react-router-dom';
 import TiltCard from '@/components/ui/TiltCard';
 import { cn } from '@/lib/utils';
+import logo from '../assets/logo.png';
+import campusBg from '../assets/campus_bg.png';
 
 import Ticker from '@/components/Ticker';
 
@@ -48,13 +50,13 @@ const LandingPage: React.FC = () => {
             {/* Hero Section */}
             <section className="min-h-[85vh] relative flex flex-col items-center justify-center px-6 lg:px-12 pt-24 overflow-hidden">
                 <div className="absolute inset-0 z-0">
-                    <img src="/src/assets/campus_bg.png" className="w-full h-full object-cover grayscale opacity-30 scale-105" />
+                    <img src={campusBg} className="w-full h-full object-cover grayscale opacity-30 scale-105" />
                     <div className="absolute inset-0 bg-gradient-to-b from-academy-navy via-academy-navy/30 to-academy-navy" />
                 </div>
                 
                 {/* Logo watermark */}
                 <div className="absolute inset-0 z-[1] flex items-center justify-center pointer-events-none">
-                    <img src="/src/assets/logo.png" alt="" className="w-[500px] h-[500px] object-contain opacity-[0.06]" />
+                    <img src={logo} alt="" className="w-[500px] h-[500px] object-contain opacity-[0.06]" />
                 </div>
                 
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="flex flex-col items-center text-center relative z-20">

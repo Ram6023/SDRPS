@@ -2,7 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ShieldCheck, Target, GraduationCap, Users } from 'lucide-react';
 import TiltCard from '@/components/ui/TiltCard';
-import { cn } from '@/lib/utils';
+
+import campusBg from '../assets/campus_bg.png';
 
 const AboutPage: React.FC = () => {
     const coreValues = [
@@ -15,7 +16,7 @@ const AboutPage: React.FC = () => {
     return (
         <main className="min-h-screen bg-academy-navy relative pt-40 px-16 pb-32">
              <div className="absolute inset-x-0 top-0 h-[600px] pointer-events-none opacity-20">
-                <img src="/src/assets/campus_bg.png" className="w-full h-full object-cover grayscale opacity-40 scale-110" />
+                <img src={campusBg} className="w-full h-full object-cover grayscale opacity-40 scale-110" />
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-academy-navy/50 to-academy-navy" />
             </div>
 
