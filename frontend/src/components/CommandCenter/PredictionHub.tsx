@@ -64,7 +64,7 @@ const PredictionHub: React.FC<PredictionHubProps> = ({ onSubmit, loading }) => {
   });
 
   const steps = [
-      { id: 1, title: 'IDENTITY_PROFILE', icon: User, fields: [{ name: 'name', label: 'SUBJECT_FULL_NAME', placeholder: 'ANONYMOUS_VOID', type: 'text' }] },
+      { id: 1, title: 'IDENTITY_PROFILE', icon: User, fields: [{ name: 'name', label: 'STUDENT_FULL_NAME', placeholder: 'ENTER STUDENT NAME', type: 'text' }] },
       { id: 2, title: 'ENGAGEMENT_METRICS', icon: Activity, fields: [{ name: 'attendance', label: 'ATTENDANCE_VECTOR (0-100)', placeholder: '85', type: 'number' }] },
       { id: 3, title: 'ACADEMIC_HISTORY', icon: GraduationCap, fields: [
           { name: 'sem1_cgpa', label: 'SEMESTER_1_CGPA (0-10)', placeholder: '7.5', type: 'number' },
