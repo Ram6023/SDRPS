@@ -22,11 +22,11 @@ const ResultGauge: React.FC<ResultGaugeProps> = ({ probability, riskLevel }) => 
 
   return (
     <TiltCard glowColor={color === '#be123c' ? '190, 18, 60' : color === '#f59e0b' ? '245, 158, 11' : '16, 185, 129'} className="w-full h-full">
-      <div className="panel-glass rounded-[3rem] p-12 flex flex-col items-center justify-center h-full relative overflow-hidden group border-white/[0.04] shadow-3xl" style={{ transformStyle: 'preserve-3d' }}>
-        <div className="absolute top-10 left-10 text-[9px] font-mono font-black text-slate-800 uppercase tracking-[0.4em] px-4 py-2 border border-white/[0.03] rounded-xl backdrop-blur-3xl">RISK_ANALYSIS_NODE</div>
+      <div className="panel-glass rounded-[3rem] p-8 sm:p-12 flex flex-col items-center justify-center h-full relative group border-white/[0.04] shadow-3xl" style={{ transformStyle: 'preserve-3d' }}>
+        <div className="absolute top-8 left-8 text-[8px] font-mono font-black text-slate-800 uppercase tracking-[0.3em] px-3 py-1.5 border border-white/[0.03] rounded-lg backdrop-blur-3xl z-20">RISK_ANALYSIS_NODE</div>
         
-        <div className="relative w-72 h-72 mb-10" style={{ transform: 'translateZ(50px)' }}>
-          <svg className="w-full h-full -rotate-90 transform group-hover:scale-105 transition-transform duration-1000">
+        <div className="relative w-full max-w-[280px] aspect-square mb-8" style={{ transform: 'translateZ(50px)' }}>
+          <svg viewBox="0 0 288 288" className="w-full h-full -rotate-90 transform group-hover:scale-105 transition-transform duration-1000">
             <circle cx="144" cy="144" r="120" stroke="rgba(255,255,255,0.03)" strokeWidth="12" fill="none" />
             <motion.circle
               cx="144" cy="144" r="120"
@@ -36,12 +36,12 @@ const ResultGauge: React.FC<ResultGaugeProps> = ({ probability, riskLevel }) => 
               animate={{ strokeDashoffset: 2 * Math.PI * 120 * (1 - probability) }}
               transition={{ duration: 2.5, ease: [0.16, 1, 0.3, 1] }}
               strokeLinecap="round"
-              style={{ filter: `drop-shadow(0 0 30px ${color})` }}
+              style={{ filter: `drop-shadow(0 0 20px ${color})` }}
             />
           </svg>
-          <div className="absolute inset-0 flex flex-col items-center justify-center" style={{ transform: 'translateZ(30px)' }}>
-            <span className="text-7xl font-black text-white tracking-tighter leading-none mb-2 drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">{percent}%</span>
-            <span className="text-[10px] font-mono font-black text-slate-700 tracking-[0.4em] uppercase">PROBABILITY</span>
+          <div className="absolute inset-0 flex flex-col items-center justify-center p-4" style={{ transform: 'translateZ(30px)' }}>
+            <span className="text-5xl sm:text-7xl font-black text-white tracking-tighter leading-none mb-2 drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">{percent}%</span>
+            <span className="text-[9px] font-mono font-black text-slate-700 tracking-[0.4em] uppercase">PROBABILITY</span>
           </div>
         </div>
 
