@@ -70,7 +70,7 @@ const PredictionHub: React.FC<PredictionHubProps> = ({ onSubmit, loading }) => {
           { name: 'sem1_cgpa', label: 'SEMESTER_1_CGPA (0-10)', placeholder: '7.5', type: 'number' },
           { name: 'sem2_cgpa', label: 'SEMESTER_2_CGPA (0-10)', placeholder: '7.8', type: 'number' }
       ] },
-      { id: 4, title: 'FINANCIAL_PROTOCOL', icon: CreditCard, fields: [{ name: 'fee_paid', label: 'TUITION_STATUS (1=PAID, 0=UNPAID)', placeholder: '1', type: 'number' }] }
+      { id: 4, title: 'FEE_STATUS', icon: CreditCard, fields: [{ name: 'fee_paid', label: 'TUITION_PAYMENT_STATUS', placeholder: '1', type: 'select' }] }
   ];
 
   const currentStep = steps.find(s => s.id === step);
@@ -118,14 +118,44 @@ const PredictionHub: React.FC<PredictionHubProps> = ({ onSubmit, loading }) => {
                 <motion.div key={step} initial={{ opacity: 0, x: 50, filter: 'blur(10px)' }} animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }} exit={{ opacity: 0, x: -50, filter: 'blur(10px)' }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
                     {currentStep?.fields.map(f => (
                         <div key={f.name} className="mb-8">
-                             <InputGroup 
-                                label={f.label}
-                                type={f.type}
-                                value={(data as any)[f.name]}
-                                placeholder={f.placeholder}
-                                icon={currentStep?.icon}
-                                onChange={(e: any) => setData({ ...data, [f.name]: e.target.value })}
-                            />
+                             {f.type === 'select' ? (
+                                <div className="space-y-6" style={{ transform: 'translateZ(20px)' }}>
+                                    <div className="flex items-center gap-3">
+                                         <label className="text-[8px] font-mono font-black uppercase tracking-[0.4em] text-slate-700 block px-4 border-l border-sunset-amber/40">{f.label}</label>
+                                         <div className="flex-1 h-[1px] bg-white/[0.03]" />
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-6">
+                                        {[
+                                            { label: 'PAID', val: '1', color: 'text-emerald-vibrant' },
+                                            { label: 'UNPAID', val: '0', color: 'text-sunset-rose' }
+                                        ].map(opt => (
+                                            <button 
+                                                key={opt.val}
+                                                onClick={() => setData({ ...data, [f.name]: opt.val })}
+                                                className={cn("p-8 rounded-3xl border transition-all duration-500 flex flex-col items-center gap-4 group/opt",
+                                                    (data as any)[f.name] === opt.val 
+                                                        ? "bg-white/[0.04] border-sunset-amber shadow-[0_0_40px_rgba(245,158,11,0.1)]" 
+                                                        : "bg-black/40 border-white/5 opacity-40 hover:opacity-100"
+                                                )}
+                                            >
+                                                <div className={cn("text-4xl font-black font-mono tracking-tighter transition-transform group-hover/opt:scale-110", (data as any)[f.name] === opt.val ? "text-white" : "text-slate-800")}>{opt.label}</div>
+                                                <div className="flex gap-1">
+                                                    {[1,2,3].map(i => <div key={i} className={cn("w-1 h-1 rounded-full", (data as any)[f.name] === opt.val ? "bg-sunset-amber" : "bg-white/5")} />)}
+                                                </div>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                             ) : (
+                                <InputGroup 
+                                   label={f.label}
+                                   type={f.type}
+                                   value={(data as any)[f.name]}
+                                   placeholder={f.placeholder}
+                                   icon={currentStep?.icon}
+                                   onChange={(e: any) => setData({ ...data, [f.name]: e.target.value })}
+                               />
+                             )}
                         </div>
                     ))}
                 </motion.div>
