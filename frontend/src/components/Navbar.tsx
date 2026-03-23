@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { GraduationCap, LayoutDashboard, BrainCircuit, Upload, Info, Home as HomeIcon } from 'lucide-react';
+import { GraduationCap, LayoutDashboard, BrainCircuit, Upload, Home as HomeIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 import logo from '../assets/logo.png';
@@ -26,7 +26,6 @@ const Navbar: React.FC = () => {
         { name: 'HOME', path: '/', icon: HomeIcon },
         { name: 'PREDICTION', path: '/predict', icon: BrainCircuit },
         { name: 'DASHBOARD', path: '/dashboard', icon: LayoutDashboard },
-        { name: 'INSIGHTS', path: '/insights', icon: Info },
         { name: 'UPLOAD', path: '/upload', icon: Upload },
         { name: 'ABOUT', path: '/about', icon: GraduationCap }
     ];

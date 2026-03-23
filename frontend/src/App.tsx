@@ -5,7 +5,6 @@ import Navbar from './components/Navbar';
 import LandingPage from './pages/LandingPage';
 import PredictionPage from './pages/PredictionPage';
 import DashboardPage from './pages/DashboardPage';
-import InsightsPage from './pages/InsightsPage';
 import UploadPage from './pages/UploadPage';
 import AboutPage from './pages/AboutPage';
 
@@ -28,7 +27,6 @@ const AnimatedRoutes = () => {
                 <Route path="/" element={<PageTransition><LandingPage /></PageTransition>} />
                 <Route path="/predict" element={<PageTransition><PredictionPage /></PageTransition>} />
                 <Route path="/dashboard" element={<PageTransition><DashboardPage /></PageTransition>} />
-                <Route path="/insights" element={<PageTransition><InsightsPage /></PageTransition>} />
                 <Route path="/upload" element={<PageTransition><UploadPage /></PageTransition>} />
                 <Route path="/about" element={<PageTransition><AboutPage /></PageTransition>} />
             </Routes>

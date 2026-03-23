@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { BrainCircuit, LayoutDashboard, Database, Info, ChevronRight } from 'lucide-react';
+import { BrainCircuit, LayoutDashboard, Database, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import TiltCard from '@/components/ui/TiltCard';
 import { cn } from '@/lib/utils';
@@ -96,7 +96,6 @@ const LandingPage: React.FC = () => {
             {/* Feature Blocks */}
             <FeatureBlock title="RISK_DASHBOARD" desc="Real-time data visualization of institutional attrition vectors and student success metrics." icon={LayoutDashboard} color="text-sunset-amber" pattern="bg-grid-cyber" path="/dashboard" />
             <FeatureBlock title="DROPOUT_PREDICTION" desc="Neural predictive scanning of individual student trajectories with high-confidence results." icon={BrainCircuit} color="text-sunset-rose" reverse={true} pattern="bg-neural-dots" path="/predict" />
-            <FeatureBlock title="AI_INSIGHTS" desc="Deep diagnostic explanations of risk factors and institutional procedural alignment." icon={Info} color="text-emerald-500" pattern="bg-grid-cyber" path="/insights" />
             <FeatureBlock title="BATCH_UPLOAD" desc="Automated ingestion protocols for institutional metadata and massive-scale dropout audits." icon={Database} color="text-sunset-amber" reverse={true} pattern="bg-neural-dots" path="/upload" />
         </main>
     );
