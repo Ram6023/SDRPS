@@ -43,28 +43,28 @@ const StatGrid: React.FC<StatGridProps> = ({ history = [] }) => {
           transition={{ delay: idx * 0.1, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
         >
           <TiltCard glowColor={card.glow} className="cursor-pointer group h-full">
-            <div className={cn("panel-glass p-10 rounded-[3rem] relative overflow-hidden h-full flex flex-col justify-between border-white/[0.04] shadow-3xl", card.pattern)} style={{ transformStyle: 'preserve-3d' }}>
-              <div className="absolute top-0 right-0 w-44 h-44 blur-[120px] rounded-full pointer-events-none opacity-20" style={{ background: `rgb(${card.glow})` }} />
+            <div className={cn("panel-glass p-6 rounded-[1.5rem] relative overflow-hidden h-full flex flex-col justify-between border-white/[0.04] shadow-2xl", card.pattern)} style={{ transformStyle: 'preserve-3d' }}>
+              <div className="absolute top-0 right-0 w-32 h-32 blur-[80px] rounded-full pointer-events-none opacity-20" style={{ background: `rgb(${card.glow})` }} />
               
-              <div className="flex items-center justify-between mb-12" style={{ transform: 'translateZ(30px)' }}>
-                <motion.div whileHover={{ scale: 1.2, rotate: 12 }} className={cn("p-5 rounded-2xl shadow-3xl", card.iconBg)}>
-                   <card.icon className={cn("w-7 h-7", card.iconColor)} />
+              <div className="flex items-center justify-between mb-8" style={{ transform: 'translateZ(30px)' }}>
+                <motion.div whileHover={{ scale: 1.1, rotate: 8 }} className={cn("p-3 rounded-xl shadow-2xl", card.iconBg)}>
+                   <card.icon className={cn("w-5 h-5", card.iconColor)} />
                 </motion.div>
-                <div className={cn("text-[8px] font-black uppercase tracking-[0.4em] px-4 py-2 rounded-xl backdrop-blur-3xl border", card.tagBg)}>
+                <div className={cn("text-[7px] font-black uppercase tracking-[0.3em] px-3 py-1.5 rounded-lg backdrop-blur-3xl border", card.tagBg)}>
                    {card.tag}
                 </div>
               </div>
 
-              <div className="space-y-4 mt-auto" style={{ transform: 'translateZ(50px)' }}>
-                <div className="text-6xl font-black text-white tracking-tighter leading-none mb-2 font-mono group-hover:scale-110 transition-transform origin-left duration-1000 shadow-2xl">
+              <div className="space-y-2 mt-auto" style={{ transform: 'translateZ(50px)' }}>
+                <div className="text-3xl font-black text-white tracking-tighter leading-none mb-1 font-mono group-hover:scale-105 transition-transform origin-left duration-700 shadow-xl">
                   {card.isNumber ? <AnimatedNumber value={card.value as number} /> : card.value}
                 </div>
-                <div className="text-[11px] font-mono font-black text-slate-700 tracking-[0.3em] uppercase group-hover:text-sunset-amber transition-colors duration-700">
+                <div className="text-[9px] font-mono font-black text-slate-700 tracking-[0.2em] uppercase group-hover:text-sunset-amber transition-colors duration-700">
                    {card.label}
                 </div>
               </div>
 
-              <div className="mt-8 h-[2px] w-full bg-white/[0.03] rounded-full overflow-hidden relative">
+              <div className="mt-6 h-[1.5px] w-full bg-white/[0.03] rounded-full overflow-hidden relative">
                  <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: '100%' }}

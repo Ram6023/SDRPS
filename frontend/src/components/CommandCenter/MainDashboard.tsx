@@ -19,18 +19,18 @@ const MainDashboard: React.FC<MainDashboardProps> = ({ history = [] }) => {
   ];
 
   const StatPanel = ({ title, val, icon: Icon, color, bg, border }: any) => (
-    <div className={cn("p-10 rounded-[3rem] border backdrop-blur-3xl relative overflow-hidden group/stat transition-all duration-700 hover:bg-white/[0.02] shadow-2xl", bg, border)}>
-        <div className="absolute top-0 right-0 w-32 h-32 bg-white/[0.02] blur-[40px] rounded-full translate-x-1/2 -translate-y-1/2" />
-        <div className="flex items-center justify-between mb-8">
-            <div className={cn("p-4 rounded-xl shadow-2xl", bg)}>
-                <Icon className={cn("w-6 h-6", color)} />
+    <div className={cn("p-6 rounded-2xl border backdrop-blur-3xl relative overflow-hidden group/stat transition-all duration-700 hover:bg-white/[0.02] shadow-2xl", bg, border)}>
+        <div className="absolute top-0 right-0 w-24 h-24 bg-white/[0.02] blur-[30px] rounded-full translate-x-1/2 -translate-y-1/2" />
+        <div className="flex items-center justify-between mb-6">
+            <div className={cn("p-3 rounded-lg shadow-2xl", bg)}>
+                <Icon className={cn("w-5 h-5", color)} />
             </div>
-            <div className="text-[11px] font-mono font-black text-slate-700 tracking-[0.3em] uppercase">{title}</div>
+            <div className="text-[8px] font-mono font-black text-slate-700 tracking-[0.2em] uppercase">{title}</div>
         </div>
-        <div className="text-5xl font-black text-white tracking-tighter leading-none mb-3 group-hover/stat:scale-105 transition-transform origin-left duration-700">{val}</div>
-        <div className="flex items-center gap-3 mt-4 opacity-40 group-hover/stat:opacity-100 transition-opacity">
-            <div className="w-2 h-2 rounded-full bg-sunset-amber animate-pulse" />
-            <span className="text-[9px] font-black text-slate-800 tracking-widest uppercase">ENROLLMENT_NODE_SCANNING</span>
+        <div className="text-3xl font-black text-white tracking-tighter leading-none mb-2 group-hover/stat:scale-105 transition-transform origin-left duration-700">{val}</div>
+        <div className="flex items-center gap-2 mt-3 opacity-40 group-hover/stat:opacity-100 transition-opacity">
+            <div className="w-1.5 h-1.5 rounded-full bg-sunset-amber animate-pulse" />
+            <span className="text-[7px] font-black text-slate-800 tracking-widest uppercase">ENROLLMENT_NODE</span>
         </div>
     </div>
   );
@@ -40,27 +40,27 @@ const MainDashboard: React.FC<MainDashboardProps> = ({ history = [] }) => {
       {/* Risk Trajectory Chart */}
       <div className="lg:col-span-8">
         <TiltCard glowColor="245, 158, 11">
-          <div className="panel-glass rounded-[4rem] p-16 h-[700px] flex flex-col relative overflow-hidden border-white/[0.04] shadow-3xl" style={{ transformStyle: 'preserve-3d' }}>
-            <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-sunset-amber/5 blur-[150px] rounded-full translate-x-1/3 -translate-y-1/3 pointer-events-none" />
+          <div className="panel-glass rounded-[2rem] p-8 h-[450px] flex flex-col relative overflow-hidden border-white/[0.04] shadow-2xl" style={{ transformStyle: 'preserve-3d' }}>
+            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-sunset-amber/5 blur-[100px] rounded-full translate-x-1/3 -translate-y-1/3 pointer-events-none" />
             
-            <div className="flex items-center justify-between mb-16" style={{ transform: 'translateZ(30px)' }}>
-                 <div className="flex items-center gap-6">
-                    <div className="p-4 bg-sunset-amber/10 rounded-2xl ring-1 ring-sunset-amber/40 shadow-3xl">
-                        <TrendingUp className="w-8 h-8 text-sunset-amber" />
+            <div className="flex items-center justify-between mb-8" style={{ transform: 'translateZ(30px)' }}>
+                 <div className="flex items-center gap-4">
+                    <div className="p-3 bg-sunset-amber/10 rounded-xl ring-1 ring-sunset-amber/40 shadow-2xl">
+                        <TrendingUp className="w-5 h-5 text-sunset-amber" />
                     </div>
                     <div>
-                        <h3 className="text-4xl font-black text-white tracking-tight leading-none uppercase italic border-l-4 border-sunset-amber pl-6">RISK_TRAJECTORY</h3>
-                        <span className="text-[10px] font-mono font-black text-slate-700 tracking-[0.4em] uppercase ml-6">NEURAL_TEMPORAL_FLOW_V5</span>
+                        <h3 className="text-xl font-black text-white tracking-tight leading-none uppercase italic border-l-2 border-sunset-amber pl-4">RISK_TRAJECTORY</h3>
+                        <span className="text-[8px] font-mono font-black text-slate-700 tracking-[0.3em] uppercase ml-4">NEURAL_TEMPORAL_FLOW</span>
                     </div>
                  </div>
-                 <div className="flex gap-4">
+                 <div className="flex gap-2">
                      {['YEARLY', 'MONTHLY', 'REAL_TIME'].map(t => (
-                        <button key={t} className="px-5 py-2 rounded-xl text-[9px] font-black text-slate-700 border border-white/5 hover:bg-white/5 transition-all tracking-[0.2em]">{t}</button>
+                        <button key={t} className="px-3 py-1.5 rounded-lg text-[8px] font-black text-slate-700 border border-white/5 hover:bg-white/5 transition-all tracking-[0.1em]">{t}</button>
                      ))}
                  </div>
             </div>
 
-            <div className="flex-1 w-full min-h-[400px]" style={{ transform: 'translateZ(20px)' }}>
+            <div className="flex-1 w-full min-h-[300px]" style={{ transform: 'translateZ(20px)' }}>
                <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                  <AreaChart data={chartData}>
                    <defs>
@@ -97,28 +97,28 @@ const MainDashboard: React.FC<MainDashboardProps> = ({ history = [] }) => {
       </div>
 
       {/* Side Stats */}
-      <div className="lg:col-span-4 grid grid-rows-2 gap-12">
+      <div className="lg:col-span-4 grid grid-rows-2 gap-8">
         <StatPanel title="ACTIVE_MONITORING" val="1.8K" icon={Users} color="text-sunset-amber" bg="bg-sunset-amber/10" border="border-sunset-amber/30" />
         <StatPanel title="DATA_INGEST_RATE" val="99.9%" icon={Database} color="text-sunset-rose" bg="bg-sunset-rose/10" border="border-sunset-rose/30" />
       </div>
 
       {/* Lower Dashboard */}
-      <div className="lg:col-span-12 grid grid-cols-1 lg:grid-cols-3 gap-12">
+      <div className="lg:col-span-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
          <TiltCard glowColor="30, 27, 75">
-            <div className="panel-glass rounded-[4rem] p-16 h-[500px] border-white/[0.04] relative overflow-hidden shadow-3xl">
-                <div className="absolute top-0 right-0 w-44 h-44 bg-academy-navy/10 blur-[60px] rounded-full translate-x-1/2 -translate-y-1/2" />
-                <div className="flex items-center gap-6 mb-12">
-                    <div className="p-4 bg-academy-navy/10 rounded-2xl ring-1 ring-academy-navy/40 shadow-2xl">
-                        <Activity className="w-6 h-6 text-slate-400" />
+            <div className="panel-glass rounded-[2rem] p-8 h-[350px] border-white/[0.04] relative overflow-hidden shadow-2xl">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-academy-navy/10 blur-[40px] rounded-full translate-x-1/2 -translate-y-1/2" />
+                <div className="flex items-center gap-4 mb-8">
+                    <div className="p-3 bg-academy-navy/10 rounded-xl ring-1 ring-academy-navy/40 shadow-2xl">
+                        <Activity className="w-5 h-5 text-slate-400" />
                     </div>
-                    <div className="text-2xl font-black text-white tracking-tight uppercase italic">LIVE_FEED</div>
+                    <div className="text-xl font-black text-white tracking-tight uppercase italic">LIVE_FEED</div>
                 </div>
-                <div className="flex-1 w-full h-[300px]">
+                <div className="flex-1 w-full h-[200px]">
                     <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                          <BarChart data={chartData}>
                              <Bar dataKey="risk">
                                  {chartData.map((_, index: number) => (
-                                     <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#f59e0b' : '#be123c'} radius={10} />
+                                     <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#f59e0b' : '#be123c'} radius={5} />
                                  ))}
                              </Bar>
                              <XAxis hide />
@@ -131,34 +131,34 @@ const MainDashboard: React.FC<MainDashboardProps> = ({ history = [] }) => {
 
          <div className="lg:col-span-2">
              <TiltCard glowColor="245, 158, 11">
-                <div className="panel-glass rounded-[4rem] p-16 h-[500px] border-white/[0.04] relative overflow-hidden shadow-3xl">
-                    <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-sunset-amber/5 blur-[120px] rounded-full translate-x-1/2 -translate-y-1/2" />
-                    <div className="flex items-center gap-6 mb-12">
-                        <div className="p-4 bg-sunset-amber/10 rounded-2xl ring-1 ring-sunset-amber/40 shadow-2xl">
-                            <Sparkles className="w-6 h-6 text-sunset-amber" />
+                <div className="panel-glass rounded-[2rem] p-8 h-[350px] border-white/[0.04] relative overflow-hidden shadow-2xl">
+                    <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-sunset-amber/5 blur-[100px] rounded-full translate-x-1/2 -translate-y-1/2" />
+                    <div className="flex items-center gap-4 mb-8">
+                        <div className="p-3 bg-sunset-amber/10 rounded-xl ring-1 ring-sunset-amber/40 shadow-2xl">
+                            <Sparkles className="w-5 h-5 text-sunset-amber" />
                         </div>
-                        <div className="text-2xl font-black text-white tracking-tight uppercase italic">INSTITUTIONAL_ALIGMENT_INDEX</div>
+                        <div className="text-xl font-black text-white tracking-tight uppercase italic">ALIGNMENT_INDEX</div>
                     </div>
-                    <div className="grid grid-cols-2 gap-12">
-                         <div className="space-y-4">
-                            <div className="text-6xl font-black text-white tracking-tighter">94.2%</div>
-                            <div className="text-[10px] font-mono font-black text-slate-700 tracking-[0.4em] uppercase">SYSTEM_SUCCESS_PROJECTION</div>
-                            <div className="h-1.5 w-full bg-white/5 rounded-full relative overflow-hidden mt-8">
+                    <div className="grid grid-cols-2 gap-8">
+                         <div className="space-y-2">
+                            <div className="text-4xl font-black text-white tracking-tighter">94.2%</div>
+                            <div className="text-[8px] font-mono font-black text-slate-700 tracking-[0.2em] uppercase">SYSTEM_SUCCESS</div>
+                            <div className="h-1 w-full bg-white/5 rounded-full relative overflow-hidden mt-4">
                                 <motion.div initial={{ width: 0 }} animate={{ width: '94.2%' }} transition={{ duration: 2 }} className="h-full bg-sunset-amber rounded-full" />
                             </div>
                          </div>
-                         <div className="space-y-4">
-                            <div className="text-6xl font-black text-white tracking-tighter">12.4%</div>
-                            <div className="text-[10px] font-mono font-black text-slate-700 tracking-[0.4em] uppercase">PROJECTED_DROPOUT_GAIN</div>
-                            <div className="h-1.5 w-full bg-white/5 rounded-full relative overflow-hidden mt-8">
+                         <div className="space-y-2">
+                            <div className="text-4xl font-black text-white tracking-tighter">12.4%</div>
+                            <div className="text-[8px] font-mono font-black text-slate-700 tracking-[0.2em] uppercase">DROPOUT_GAIN</div>
+                            <div className="h-1 w-full bg-white/5 rounded-full relative overflow-hidden mt-4">
                                 <motion.div initial={{ width: 0 }} animate={{ width: '12.4%' }} transition={{ duration: 2 }} className="h-full bg-sunset-rose rounded-full" />
                             </div>
                          </div>
                     </div>
-                    <div className="mt-16 p-10 rounded-[3rem] bg-white/[0.02] border border-white/5 backdrop-blur-3xl">
-                        <div className="flex items-center gap-6">
-                             <div className="w-12 h-12 rounded-xl bg-sunset-amber/10 flex items-center justify-center text-sunset-amber ring-1 ring-sunset-amber/30"><AlertCircle className="w-6 h-6" /></div>
-                             <p className="text-[13px] font-bold text-slate-500 uppercase tracking-widest leading-relaxed italic">Neural pathways indicate a <span className="text-sunset-amber">4.2% increase</span> in student retention probability across the autumn semester cohort.</p>
+                    <div className="mt-8 p-6 rounded-2xl bg-white/[0.01] border border-white/5 backdrop-blur-3xl">
+                        <div className="flex items-center gap-4">
+                             <div className="w-8 h-8 rounded-lg bg-sunset-amber/10 flex items-center justify-center text-sunset-amber ring-1 ring-sunset-amber/30"><AlertCircle className="w-4 h-4" /></div>
+                             <p className="text-[11px] font-bold text-slate-600 uppercase tracking-widest leading-relaxed italic">Neural pathways indicate a <span className="text-sunset-amber">4.2% increase</span> in student retention.</p>
                         </div>
                     </div>
                 </div>
