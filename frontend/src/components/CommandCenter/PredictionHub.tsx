@@ -10,27 +10,27 @@ interface PredictionHubProps {
 }
 
 const Header = ({ title, icon: Icon }: any) => (
-    <div className="space-y-3" style={{ transform: 'translateZ(15px)' }}>
-        <div className="flex items-center gap-5 text-sunset-amber mb-2">
-          <div className="p-3 bg-sunset-amber/10 rounded-xl ring-1 ring-sunset-amber/30"><Icon className="w-6 h-6" /></div>
-          <div className="text-[10px] font-mono font-black uppercase tracking-[0.3em] bg-sunset-amber/20 px-3 py-1 rounded-lg flex items-center gap-2 border border-sunset-amber/30">
-            <Sparkles className="w-3 h-3" /> PHASE_DATA_INPUT
+    <div className="space-y-2" style={{ transform: 'translateZ(15px)' }}>
+        <div className="flex items-center gap-4 text-sunset-amber mb-1">
+          <div className="p-2 bg-sunset-amber/10 rounded-lg ring-1 ring-sunset-amber/30"><Icon className="w-5 h-5" /></div>
+          <div className="text-[9px] font-mono font-black uppercase tracking-[0.2em] bg-sunset-amber/20 px-2 py-1 rounded-md flex items-center gap-2 border border-sunset-amber/30">
+            <Sparkles className="w-2.5 h-2.5" /> PHASE_DATA_INPUT
           </div>
         </div>
-        <h3 className="text-3xl font-black text-white tracking-tight leading-none uppercase">{title}</h3>
-        <p className="text-sm text-slate-700 font-bold uppercase tracking-wider opacity-60 leading-relaxed">SYSTEM_DATA_INGESTION: [STUDENT_DROPOUT_RISK_PROTOCOL]</p>
+        <h3 className="text-2xl font-black text-white tracking-tight leading-none uppercase">{title}</h3>
+        <p className="text-[10px] text-slate-700 font-bold uppercase tracking-wider opacity-60 leading-relaxed font-mono">SYSTEM_DATA_INGESTION: [PROTOCOL_V2]</p>
     </div>
 );
 
 const InputGroup = ({ label, icon: Icon, ...props }: any) => (
     <div className="space-y-4" style={{ transform: 'translateZ(20px)' }}>
         <div className="flex items-center gap-3">
-             <label className="text-[9px] font-mono font-black uppercase tracking-[0.4em] text-slate-700 block px-4 border-l border-white/5">{label}</label>
+             <label className="text-[8px] font-mono font-black uppercase tracking-[0.4em] text-slate-700 block px-4 border-l border-sunset-amber/40">{label}</label>
              <div className="flex-1 h-[1px] bg-white/[0.03]" />
         </div>
         <div className="relative group/input">
           <input {...props} required
-              className="w-full text-white px-10 py-7 rounded-[1.5rem] outline-none transition-all font-black placeholder:text-slate-900 text-3xl font-mono shadow-2xl"
+              className="w-full text-white px-8 py-5 rounded-2xl outline-none transition-all font-black placeholder:text-slate-900 text-xl font-mono shadow-2xl"
               style={{ 
                   background: 'rgba(2,2,6,0.9)', 
                   border: '1px solid rgba(255,255,255,0.04)',
@@ -45,9 +45,9 @@ const InputGroup = ({ label, icon: Icon, ...props }: any) => (
                 e.target.style.boxShadow = 'inset 0 10px 40px rgba(0,0,0,0.5)'; 
               }}
           />
-          <div className="absolute right-10 top-1/2 -translate-y-1/2 opacity-0 group-hover/input:opacity-100 transition-opacity pointer-events-none flex gap-2">
-            <Icon className="w-6 h-6 text-sunset-amber/10" />
-            <Cpu className="w-6 h-6 text-sunset-rose/10" />
+          <div className="absolute right-8 top-1/2 -translate-y-1/2 opacity-0 group-hover/input:opacity-100 transition-opacity pointer-events-none flex gap-2">
+            <Icon className="w-5 h-5 text-sunset-amber/10" />
+            <Cpu className="w-5 h-5 text-sunset-rose/10" />
           </div>
         </div>
     </div>
@@ -93,27 +93,27 @@ const PredictionHub: React.FC<PredictionHubProps> = ({ onSubmit, loading }) => {
 
   return (
     <TiltCard glowColor="245, 158, 11" className="w-full">
-      <div className="panel-glass rounded-[4rem] p-16 min-h-[700px] flex flex-col relative overflow-hidden group border-white/[0.04] shadow-3xl" style={{ transformStyle: 'preserve-3d' }}>
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-sunset-amber/5 blur-[150px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+      <div className="panel-glass rounded-[2.5rem] p-10 min-h-[500px] flex flex-col relative overflow-hidden group border-white/[0.04] shadow-3xl" style={{ transformStyle: 'preserve-3d' }}>
+        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-sunset-amber/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
         
-        <div className="flex justify-between items-start mb-24" style={{ transform: 'translateZ(30px)' }}>
+        <div className="flex justify-between items-start mb-16" style={{ transform: 'translateZ(30px)' }}>
             <Header title={currentStep?.title} icon={currentStep?.icon} />
-            <div className="flex gap-4">
+            <div className="flex gap-2">
                 {steps.map(s => (
                     <motion.div key={s.id} 
                         initial={false}
                         animate={{ 
-                            width: step === s.id ? 60 : 12,
+                            width: step === s.id ? 40 : 8,
                             backgroundColor: step >= s.id ? '#f59e0b' : 'rgba(255,255,255,0.05)',
                             opacity: step >= s.id ? 1 : 0.3
                         }}
-                        className="h-3 rounded-full shadow-2xl border border-white/5"
+                        className="h-2 rounded-full shadow-2xl border border-white/5"
                     />
                 ))}
             </div>
         </div>
 
-        <div className="flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full mb-20" style={{ transform: 'translateZ(40px)' }}>
+        <div className="flex-1 flex flex-col justify-center max-w-2xl mx-auto w-full mb-12" style={{ transform: 'translateZ(40px)' }}>
             <AnimatePresence mode="wait">
                 <motion.div key={step} initial={{ opacity: 0, x: 50, filter: 'blur(10px)' }} animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }} exit={{ opacity: 0, x: -50, filter: 'blur(10px)' }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
                     {currentStep?.fields.map(f => (
@@ -140,18 +140,18 @@ const PredictionHub: React.FC<PredictionHubProps> = ({ onSubmit, loading }) => {
                  </div>
             </div>
             <motion.button 
-                whileHover={{ scale: 1.05, y: -5 }} 
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.02, y: -2 }} 
+                whileTap={{ scale: 0.98 }}
                 onClick={next}
                 disabled={loading}
-                className={cn("px-16 py-8 rounded-[2.5rem] flex items-center gap-6 font-black uppercase tracking-[0.4em] text-white shadow-3xl transition-all relative overflow-hidden group",
+                className={cn("px-10 py-5 rounded-2xl flex items-center gap-4 font-black uppercase tracking-[0.3em] text-[11px] text-white shadow-3xl transition-all relative overflow-hidden group",
                     loading ? "opacity-50 cursor-not-allowed" : "shimmer-accent"
                 )}
                 style={{ background: 'linear-gradient(135deg, #f59e0b, #be123c)' }}
             >
-                <div className="relative z-10 flex items-center gap-4">
-                    {loading ? 'PROCESSING_NEURAL_LINK...' : step === 4 ? 'INITIALIZE_PREDICTION_SCAN' : 'NEXT_DATA_PHASE'}
-                    <div className="p-2 bg-white/10 rounded-xl"><ChevronRight className="w-5 h-5" /></div>
+                <div className="relative z-10 flex items-center gap-2">
+                    {loading ? 'PROCESSING...' : step === 4 ? 'INITIALIZE_PREDICTION' : 'NEXT_PHASE'}
+                    <div className="p-1.5 bg-white/10 rounded-lg"><ChevronRight className="w-4 h-4" /></div>
                 </div>
             </motion.button>
         </div>
